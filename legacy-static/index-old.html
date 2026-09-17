@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christian Delapos - Full-Stack Web Developer</title>
+
+  <link rel="shortcut icon" href="./assets/images/avatar-1.png" type="image/x-icon">
+
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/modal.css">
+  <link rel="stylesheet" href="./assets/css/redesign.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div id="imageModal" class="modal">
+    <span id="closeModal" class="modal-close">&times;</span>
+    <img id="modalImage" src="" alt="Enlarged project image" class="modal-img">
+  </div>
+
+  <main class="container-redesign">
+    <!-- SIDEBAR -->
+    <aside class="sidebar-redesign" data-sidebar>
+      <!-- Profile Section -->
+      <div class="sidebar-profile">
+        <figure class="avatar-box-redesign">
+          <img src="./assets/images/avatar-5.jpg" alt="Christian Delapos" class="avatar-img-redesign">
+        </figure>
+        <h1 class="name-redesign">Christian Delapos</h1>
+        <p class="title-redesign">Full-Stack Web Developer</p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="stat-item">
+          <span class="stat-number">15+</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">2+</span>
+          <span class="stat-label">Years Exp</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5</span>
+          <span class="stat-label">Tech Stacks</span>
+        </div>
+      </div>
+
+      <!-- Strongest Skills -->
+      <div class="strongest-skills">
+        <h3 class="section-title-sidebar">Strongest Skills</h3>
+        <div class="skill-badge-item">
+          <span class="skill-name">Laravel</span>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 90%"></div>
+          </div>
+          <span class="skill-percent">90%</span>
+        </div>
+        <div class="skill-badge-item">
+          <span class="skill-name">PHP</span>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 85%"></div>
+          </div>
+          <span class="skill-percent">85%</span>
+        </div>
+        <div class="skill-badge-item">
+          <span class="skill-name">MySQL</span>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 80%"></div>
+          </div>
+          <span class="skill-percent">80%</span>
+        </div>
+        <div class="skill-badge-item">
+          <span class="skill-name">Tailwind CSS</span>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 85%"></div>
+          </div>
+          <span class="skill-percent">85%</span>
+        </div>
+        <div class="skill-badge-item">
+          <span class="skill-name">Full-Stack</span>
+          <div class="skill-bar">
+            <div class="skill-fill" style="width: 90%"></div>
+          </div>
+          <span class="skill-percent">90%</span>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="contact-section">
+        <h3 class="section-title-sidebar">Contact</h3>
+        <a href="mailto:delapos.christian2002@gmail.com" class="contact-link-btn">
+          <ion-icon name="mail-outline"></ion-icon>
+          <span>Email Me</span>
+        </a>
+        <a href="tel:+639486131385" class="contact-link-btn">
+          <ion-icon name="call-outline"></ion-icon>
+          <span>09486131385</span>
+        </a>
+        <a href="https://github.com/christiandelapos" target="_blank" rel="noopener noreferrer" class="contact-link-btn github-btn">
+          <ion-icon name="logo-github"></ion-icon>
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/christiandelapos" target="_blank" rel="noopener noreferrer" class="contact-link-btn">
+          <ion-icon name="logo-linkedin"></ion-icon>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+
+      <!-- Education -->
+      <div class="education-section">
+        <h3 class="section-title-sidebar">Education</h3>
+        <div class="edu-item">
+          <p class="edu-school">Davao Oriental State University</p>
+          <p class="edu-degree">BS Information Technology</p>
+          <p class="edu-date">2021 - 2025</p>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div class="social-section">
+        <a href="https://www.facebook.com/ChanDe02" target="_blank" rel="noopener noreferrer" class="social-icon">
+          <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <a href="https://www.linkedin.com/in/christiandelapos" target="_blank" rel="noopener noreferrer" class="social-icon">
+          <ion-icon name="logo-linkedin"></ion-icon>
+        </a>
+        <a href="https://github.com/christiandelapos" target="_blank" rel="noopener noreferrer" class="social-icon">
+          <ion-icon name="logo-github"></ion-icon>
+        </a>
+      </div>
+    </aside>
+
+
+
+
+
+    <!--
+      - #main-content
+    -->
+
+    <div class="main-content-redesign">
+      <!-- HERO SECTION -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h2 class="hero-headline">Building Production Web Apps</h2>
+          <p class="hero-subtitle">Full-Stack Developer | 15+ Real Projects | Laravel • PHP • React • Tailwind</p>
+          <div class="hero-ctas">
+            <a href="#portfolio" class="btn btn-primary">View My Work</a>
+            <a href="https://github.com/christiandelapos" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">GitHub Profile</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECH STACK SECTION -->
+      <section class="tech-stack-section">
+        <h3 class="section-title">Tech Stack</h3>
+        <div class="tech-categories">
+          <div class="tech-category">
+            <h4>Backend</h4>
+            <div class="tech-badges">
+              <span class="tech-badge expert">Laravel</span>
+              <span class="tech-badge expert">PHP</span>
+              <span class="tech-badge expert">MySQL</span>
+              <span class="tech-badge intermediate">Node.js</span>
+            </div>
+          </div>
+          <div class="tech-category">
+            <h4>Frontend</h4>
+            <div class="tech-badges">
+              <span class="tech-badge expert">Tailwind CSS</span>
+              <span class="tech-badge expert">HTML/CSS</span>
+              <span class="tech-badge expert">JavaScript</span>
+              <span class="tech-badge intermediate">React</span>
+              <span class="tech-badge intermediate">Vue.js</span>
+            </div>
+          </div>
+          <div class="tech-category">
+            <h4>DevOps & Tools</h4>
+            <div class="tech-badges">
+              <span class="tech-badge expert">Git</span>
+              <span class="tech-badge expert">Nginx</span>
+              <span class="tech-badge intermediate">Render</span>
+              <span class="tech-badge intermediate">Docker</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED PROJECTS -->
+      <section class="featured-projects">
+        <h3 class="section-title">Featured Projects</h3>
+        <div class="featured-grid">
+
+
+
+
+
+      <!--
+        - #ABOUT
+      -->
+
+      <article class="about  active" data-page="about">
+
+        <header>
+          <h2 class="h2 article-title">About me</h2>
+        </header>
+
+        <section class="about-text">
+          <p>
+            I am Christian Delapos, a web developer based in Davao City. I build full-stack web applications with
+            Laravel, PHP, and MySQL, and design responsive interfaces with Tailwind CSS. I currently work as a full stack
+            developer at DSG Son's Group, Inc., where I ship secure authentication, CRUD features, and solid database
+            design. I am expanding into React.js and Vue.js for richer front ends, and I use modern tooling including Git
+            and AI-assisted development to move faster without cutting corners.
+          </p>
+          <p>
+            I hold a Bachelor of Science in Information Technology from Davao Oriental State University. I completed
+            an IT internship with the Local Government Unit of Maragusan and supported IT operations in my university’s
+            IT department—hardware and software setup, maintenance, and end-user support.
+          </p>
+        </section>
+
+
+        <!--
+          - service
+        -->
+
+        <section class="service">
+
+          <h3 class="h3 service-title">What i'm doing</h3>
+
+          <ul class="service-list">
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40">
+              </div>
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Full-stack web development</h4>
+                <p class="service-item-text">
+                  Laravel, PHP, and MySQL for backends and business logic; secure authentication, CRUD flows, and
+                  optimized database design. Deployed apps with Nginx in production-style setups.
+                </p>
+              </div>
+            </li>
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/icon-design.svg" alt="UI/UX design icon" width="40">
+              </div>
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Responsive UI</h4>
+                <p class="service-item-text">
+                  HTML, CSS, Tailwind CSS, and JavaScript for utility-first, responsive layouts. Learning React.js and
+                  Vue.js for more interactive client-side experiences.
+                </p>
+              </div>
+            </li>
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/icon-app.svg" alt="AI & NLP icon" width="40">
+              </div>
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Workflow & quality</h4>
+                <p class="service-item-text">
+                  Git for version control and structured collaboration. Generative AI as a focused assistant for
+                  debugging, research, and onboarding to new frameworks—always reviewed and tested in real code.
+                </p>
+              </div>
+            </li>
+
+            <li class="service-item">
+              <div class="service-icon-box">
+                <img src="./assets/images/icon-cloud.png" alt="cloud database icon" width="40">
+              </div>
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">IT & technical support</h4>
+                <p class="service-item-text">
+                  Installation, configuration, and maintenance of hardware and software; troubleshooting, system
+                  updates, and desk-side support to keep teams productive.
+                </p>
+              </div>
+            </li>
+
+          </ul>
+
+
+        </section>
+
+
+
+
+
+
+
+      </article>
+
+
+
+
+
+      <!--
+        - #RESUME
+      -->
+
+      <article class="resume" data-page="resume">
+
+        <header>
+          <h2 class="h2 article-title">Resume</h2>
+        </header>
+
+        <section class="timeline">
+
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+
+            <h3 class="h3">Education</h3>
+          </div>
+
+          <ol class="timeline-list">
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Maragusan National High School</h4>
+
+              <span>2019 — 2021</span>
+
+              <p class="timeline-text">
+                Information and Communication Technology - Computer Systems Servicing.
+              </p>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Davao Oriental State University</h4>
+
+              <span>2021 — 2025</span>
+
+              <p class="timeline-text">
+                Bachelor of Science in Information Technology
+              </p>
+
+            </li>
+
+
+
+          </ol>
+
+        </section>
+
+        <section class="timeline">
+
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+
+            <h3 class="h3">Work Experience</h3>
+          </div>
+
+          <ol class="timeline-list">
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">DSG Son's Group, Inc. — Full stack developer</h4>
+
+              <span>July 2025 — Present</span>
+
+              <ul class="timeline-text">
+                <li>Built and deployed two full-stack web applications using Laravel, PHP, and MySQL.</li>
+                <li>Developed secure authentication, CRUD logic, and optimized database management systems.</li>
+                <li>Designed responsive, utility-first interfaces using Tailwind CSS.</li>
+                <li>Used generative AI as a focused pair-programmer to troubleshoot complex logic and speed up learning on
+                  new frameworks.</li>
+                <li>Deepening skills beyond PHP with React.js and Vue.js for more interactive applications.</li>
+              </ul>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Local Government Unit of Maragusan — IT intern</h4>
+
+              <span>April — May 2025</span>
+
+              <ul class="timeline-text">
+                <li>Assisted in the installation, configuration, and maintenance of computer hardware and software across
+                  various departments.</li>
+                <li>Supported regular software updates and system maintenance tasks to maintain efficiency.</li>
+                <li>Delivered IT support to office personnel, resolving technical concerns and improving workflow
+                  productivity.</li>
+              </ul>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Davao Oriental State University — IT Department</h4>
+
+              <span>2021 — 2025</span>
+
+              <ul class="timeline-text">
+                <li>IT support, troubleshooting, and system maintenance alongside the Bachelor of Science in Information
+                  Technology program.</li>
+              </ul>
+
+            </li>
+
+          </ol>
+
+        </section>
+
+        <section class="skill">
+
+          <h3 class="h3 skills-title">My Skills</h3>
+
+          <ul class="skills-list content-card">
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Frontend (HTML, CSS, Tailwind, JS)</h5>
+                <data value="75">75%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 75%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Backend (PHP, Laravel)</h5>
+                <data value="85">85%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 85%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Database (MySQL)</h5>
+                <data value="80">80%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Server (Nginx)</h5>
+                <data value="70">70%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 70%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">Tools (Git, AI-augmented dev)</h5>
+                <data value="80">80%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%;"></div>
+              </div>
+            </li>
+
+            <li class="skills-item">
+              <div class="title-wrapper">
+                <h5 class="h5">IT support &amp; maintenance</h5>
+                <data value="75">75%</data>
+              </div>
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 75%;"></div>
+              </div>
+            </li>
+
+          </ul>
+
+        </section>
+
+
+        <section class="skill">
+
+          <h3 class="h3 skills-title">Languages &amp; frameworks</h3>
+
+          <ul class="skills-list content-card">
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">PHP</h5>
+                <data value="85">85%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 85%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">Laravel</h5>
+                <data value="90">90%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 90%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">JavaScript</h5>
+                <data value="75">75%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 75%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">React.js &amp; Vue.js (learning)</h5>
+                <data value="45">45%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 45%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">HTML &amp; CSS</h5>
+                <data value="85">85%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 85%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">MySQL</h5>
+                <data value="82">82%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 82%;"></div>
+              </div>
+
+            </li>
+
+          </ul>
+
+        </section>
+
+      </article>
+
+
+
+
+
+      <!--
+        - #PORTFOLIO
+      -->
+
+      <article class="portfolio" data-page="portfolio">
+
+        <header>
+          <h2 class="h2 article-title">Portfolio</h2>
+        </header>
+
+        <section class="projects">
+
+          <ul class="filter-list">
+
+            <li class="filter-item">
+              <button class="active" data-filter-btn>All</button>
+            </li>
+
+            <li class="filter-item">
+              <button data-filter-btn>Web development</button>
+            </li>
+
+          </ul>
+
+          <div class="filter-select-box">
+
+            <button class="filter-select" data-select>
+
+              <div class="select-value" data-select-value>Select category</div>
+
+              <div class="select-icon">
+                <ion-icon name="chevron-down"></ion-icon>
+              </div>
+
+            </button>
+
+            <ul class="select-list">
+
+              <li class="select-item">
+                <button data-select-item>All</button>
+              </li>
+
+              <li class="select-item">
+                <button data-select-item>Web development</button>
+              </li>
+
+            </ul>
+
+          </div>
+
+          <ul class="project-list">
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="https://monthly-tracker-mdjt.onrender.com/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/case 1.png" alt="Case study 1" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Case study 1</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="https://monthly-tracker-mdjt.onrender.com/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/case 2.png" alt="Case study 2" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Case study 2</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="https://monthly-tracker-mdjt.onrender.com/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/case 3.png" alt="Case study 3" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Case study 3</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="https://monthly-tracker-mdjt.onrender.com/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/case 4.png" alt="Case study 4" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Case study 4</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="https://monthly-tracker-mdjt.onrender.com/" target="_blank" rel="noopener noreferrer">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/case 5.png" alt="Case study 5" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Case study 5</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/dashboard-schedulink.png" alt="ScheduLink dashboard" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">ScheduLink / Dashboard</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/dashboard-rop.png" alt="ROP dashboard" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">ROP / Dashboard</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/batch request.png" alt="Batch request screen" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Batch request</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (1).png" alt="finance" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Weevil/Map</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (3).png" alt="orizon" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Weevil/Dashboard</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (2).png" alt="summary" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Weevil/Login</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (4).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Weevil/Taxonomic Key</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (6).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Weevil/Repository</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (5).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Weevil/Landing Page</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (8).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Suast Dashboard</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (9).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">Suast Reservation</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (10).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">HRMO Admin</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (12).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">TechVal/Dashboard</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+            <li class="project-item  active" data-filter-item data-category="web development">
+              <a href="#">
+
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+
+                  <img src="./assets/images/pro (13).png" alt="arrival" loading="lazy">
+                </figure>
+
+                <h3 class="project-title">TechVal/Faculty-Details</h3>
+
+                <p class="project-category">Web development</p>
+
+              </a>
+            </li>
+
+          </ul>
+
+        </section>
+
+      </article>
+
+
+
+
+
+
+
+
+
+
+
+      <!--
+        - #CONTACT
+      -->
+
+      <article class="contact" data-page="contact">
+
+        <header>
+          <h2 class="h2 article-title">Contact</h2>
+        </header>
+
+        <section class="mapbox" data-mapbox>
+          <figure>
+            <iframe
+              title="Map — Km5 Guadalupe, Matina Pangi, Davao City"
+              data-contact-map
+              data-map-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31624.1820746577!2d125.58471667047077!3d7.064555579196762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f9101467d8b90d%3A0x69351d3c8c77a8e2!2sKm5%20Guadalupe%2C%20Matina%20Pangi%2C%20Davao%20City%2C%208000%20Davao%20del%20Sur!5e0!3m2!1sen!2sph!4v1716700601234!5m2!1sen!2sph"
+              src="about:blank"
+              width="400"
+              height="300"
+              style="border:0;"
+              allowfullscreen=""
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </figure>
+        </section>
+
+
+
+        <section class="contact-form">
+
+          <h3 class="h3 form-title">Contact Form</h3>
+
+          <form action="#" class="form" data-form>
+
+            <div class="input-wrapper">
+              <input type="text" name="fullname" class="form-input" placeholder="Full name" required data-form-input>
+
+              <input type="email" name="email" class="form-input" placeholder="Email address" required data-form-input>
+            </div>
+
+            <textarea name="message" class="form-input" placeholder="Your Message" required data-form-input></textarea>
+
+            <button class="form-btn" type="submit" disabled data-form-btn>
+              <ion-icon name="paper-plane"></ion-icon>
+              <span>Send Message</span>
+            </button>
+
+          </form>
+
+        </section>
+
+      </article>
+
+    </div>
+
+  </main>
+
+
+
+
+
+
+  <!--
+    - custom js link
+  -->
+  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/script2.js"></script>
+
+
+  <!--
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>

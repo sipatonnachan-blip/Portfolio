@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #09090b;
+  --secondary: #ffffff;
+  --accent: #71717a;
+  --text: #09090b;
+  --text-mid: #3f3f46;
+  --text-light: #71717a;
+  --border: #e4e4e7;
+  --bg: #fafafa;
+  --bg-card: #ffffff;
+  --bg-alt: #f4f4f5;
+  --radius: 8px;
+  --highlight-bg: linear-gradient(120deg, rgba(254, 240, 138, 0.55) 0%, rgba(253, 224, 71, 0.4) 100%);
+  --highlight-border: #facc15;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] {
+  --primary: #f4f4f5;
+  --secondary: #050505;
+  --accent: #a1a1aa;
+  --text: #f4f4f5;
+  --text-mid: #a1a1aa;
+  --text-light: #71717a;
+  --border: #1f1f23;
+  --bg: #050505;
+  --bg-card: #0c0c0e;
+  --bg-alt: #121215;
+  --highlight-bg: rgba(250, 204, 21, 0.12);
+  --highlight-border: #ca8a04;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply font-sans text-text bg-bg antialiased;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+li {
+  list-style: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-light);
+}
+
+::selection {
+  background-color: var(--text);
+  color: var(--secondary);
+}
+
+/* --- Global Theme Transition & View Transitions Ripple --- */
+html.theme-transitioning,
+html.theme-transitioning body,
+html.theme-transitioning main,
+html.theme-transitioning header,
+html.theme-transitioning nav,
+html.theme-transitioning footer,
+html.theme-transitioning div,
+html.theme-transitioning section,
+html.theme-transitioning article {
+  transition: background-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-delay: 0s !important;
+}
+
+/* Circular ripple reveal for theme toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* --- Katana Red Slashing Animations --- */
+.btn-katana-primary {
+  position: relative;
+  overflow: hidden;
+  background-color: #09090b;
+  color: #ffffff !important;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme='dark'] .btn-katana-primary {
+  background-color: #121216;
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.btn-katana-primary:hover {
+  background-color: #dc2626 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 28px rgba(239, 68, 68, 0.65), 0 4px 20px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Razor-sharp red slash blade beam */
+.btn-katana-primary::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -130%;
+  width: 50px;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 30%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(254, 202, 202, 0.8) 70%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px #ef4444);
+}
+
+.btn-katana-primary:hover::before {
+  opacity: 1;
+  animation: katana-blade-slash 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Secondary outline button */
+.btn-katana-secondary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-katana-secondary:hover {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  color: #ef4444 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-katana-secondary::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -130%;
+  width: 45px;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(239, 68, 68, 0.2) 30%,
+    rgba(239, 68, 68, 0.85) 50%,
+    rgba(255, 255, 255, 0.9) 55%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px #ef4444);
+}
+
+.btn-katana-secondary:hover::before {
+  opacity: 1;
+  animation: katana-blade-slash 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes katana-blade-slash {
+  0% {
+    left: -130%;
+  }
+  100% {
+    left: 230%;
+  }
+}
