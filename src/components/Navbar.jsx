@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { connect } from 'itty-sockets'
 import Icon from './Icon'
 import { NAV_ITEMS } from '../data/navigation'
 import { PROFILE } from '../data/contact'
@@ -22,15 +23,19 @@ export default function Navbar({ activePage, onNavigate, theme, onToggleTheme })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Zero-Reload Real-Time Presence using BroadcastChannel API + Storage Events
+  // Multi-Device Global Real-Time Presence (WebSocket via itty-sockets + BroadcastChannel)
   useEffect(() => {
     const tabId = tabIdRef.current
+    const isMobile = typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+    const deviceType = isMobile ? 'Mobile' : 'Desktop'
+
     const activeMap = new Map()
 
-    // Add self to local active map
+    // Self record
     activeMap.set(tabId, {
       id: tabId,
-      label: 'You (Current Tab)',
+      label: `You (${deviceType})`,
+      device: deviceType,
       page: activePage,
       isSelf: true,
       lastSeen: Date.now()
@@ -42,124 +47,128 @@ export default function Navbar({ activePage, onNavigate, theme, onToggleTheme })
       setViewerCount(Math.max(1, list.length))
     }
 
-    let channel = null
+    // Process incoming presence message from any device/tab
+    const handlePresenceMessage = (data) => {
+      if (!data || typeof data !== 'object') return
+      const { type, id, page, device } = data
+      if (!id || id === tabId) return
+
+      const now = Date.now()
+      const dType = device || 'Device'
+
+      if (type === 'JOIN') {
+        const isNew = !activeMap.has(id)
+        activeMap.set(id, {
+          id,
+          label: `Viewer (${dType})`,
+          device: dType,
+          page: page || 'home',
+          isSelf: false,
+          lastSeen: now
+        })
+        refreshViewers()
+        // Reply back so the newly joined device discovers existing viewers immediately
+        if (isNew) {
+          sendPresence({
+            type: 'ACK',
+            id: tabId,
+            device: deviceType,
+            page: activePage
+          })
+        }
+      } else if (type === 'ACK' || type === 'HEARTBEAT') {
+        activeMap.set(id, {
+          id,
+          label: `Viewer (${dType})`,
+          device: dType,
+          page: page || 'home',
+          isSelf: false,
+          lastSeen: now
+        })
+        refreshViewers()
+      } else if (type === 'PAGE_CHANGE') {
+        if (activeMap.has(id)) {
+          const v = activeMap.get(id)
+          v.page = page || 'home'
+          v.lastSeen = now
+          refreshViewers()
+        }
+      } else if (type === 'LEAVE') {
+        activeMap.delete(id)
+        refreshViewers()
+      }
+    }
+
+    // 1. Connect to global cloud WebSocket relay (cross-device across the internet)
+    let socketChannel = null
+    try {
+      socketChannel = connect('christian-delapos-portfolio-kbpo-presence')
+      channelRef.current = socketChannel
+
+      socketChannel.on('message', ({ message }) => {
+        try {
+          const parsed = typeof message === 'string' ? JSON.parse(message) : message
+          handlePresenceMessage(parsed)
+        } catch {
+          handlePresenceMessage(message)
+        }
+      })
+    } catch {}
+
+    // 2. Connect to local BroadcastChannel (instant zero-latency cross-tab sync)
+    let localChannel = null
     try {
       if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-        channel = new BroadcastChannel('christian_portfolio_live_presence')
-        channelRef.current = channel
-
-        channel.onmessage = (event) => {
-          const { type, id, page } = event.data || {}
-          if (!id || id === tabId) return
-
-          const now = Date.now()
-
-          if (type === 'JOIN') {
-            activeMap.set(id, {
-              id,
-              label: `Viewer ${activeMap.size + 1}`,
-              page: page || 'home',
-              isSelf: false,
-              lastSeen: now
-            })
-            refreshViewers()
-            // Immediately ACK so the new tab instantly discovers us without reload
-            channel.postMessage({
-              type: 'ACK',
-              id: tabId,
-              page: activePage
-            })
-          } else if (type === 'ACK' || type === 'HEARTBEAT') {
-            if (!activeMap.has(id)) {
-              activeMap.set(id, {
-                id,
-                label: `Viewer ${activeMap.size + 1}`,
-                page: page || 'home',
-                isSelf: false,
-                lastSeen: now
-              })
-            } else {
-              const existing = activeMap.get(id)
-              existing.lastSeen = now
-              if (page) existing.page = page
-            }
-            refreshViewers()
-          } else if (type === 'PAGE_CHANGE') {
-            if (activeMap.has(id)) {
-              activeMap.get(id).page = page
-              activeMap.get(id).lastSeen = now
-              refreshViewers()
-            }
-          } else if (type === 'LEAVE') {
-            activeMap.delete(id)
-            refreshViewers()
-          }
+        localChannel = new BroadcastChannel('christian_portfolio_local_presence')
+        localChannel.onmessage = (event) => {
+          handlePresenceMessage(event.data)
         }
-
-        // Announce join instantly across all tabs
-        channel.postMessage({
-          type: 'JOIN',
-          id: tabId,
-          page: activePage
-        })
       }
     } catch {}
 
-    // Fallback sync via localStorage storage event for separate browser windows
-    const handleStorage = (e) => {
-      if (e.key === 'portfolio_live_presence_event' && e.newValue) {
-        try {
-          const data = JSON.parse(e.newValue)
-          if (data.id && data.id !== tabId) {
-            if (data.type === 'LEAVE') {
-              activeMap.delete(data.id)
-            } else {
-              activeMap.set(data.id, {
-                id: data.id,
-                label: `Viewer ${activeMap.size + 1}`,
-                page: data.page || 'home',
-                isSelf: false,
-                lastSeen: Date.now()
-              })
-            }
-            refreshViewers()
-          }
-        } catch {}
-      }
+    const sendPresence = (payload) => {
+      try {
+        socketChannel?.send(payload)
+      } catch {}
+      try {
+        localChannel?.postMessage(payload)
+      } catch {}
     }
-    window.addEventListener('storage', handleStorage)
 
-    // Broadcast periodic heartbeat every 2 seconds and purge stale tabs (> 5s)
+    // Announce JOIN to all connected devices worldwide
+    sendPresence({
+      type: 'JOIN',
+      id: tabId,
+      device: deviceType,
+      page: activePage
+    })
+
+    // Periodic heartbeat every 3.5s and purge stale devices (> 10s of no heartbeat)
     const interval = setInterval(() => {
       const now = Date.now()
       let changed = false
 
       for (const [id, viewer] of activeMap.entries()) {
-        if (id !== tabId && now - viewer.lastSeen > 5500) {
+        if (id !== tabId && now - viewer.lastSeen > 9500) {
           activeMap.delete(id)
           changed = true
         }
       }
 
-      try {
-        channel?.postMessage({
-          type: 'HEARTBEAT',
-          id: tabId,
-          page: activePage
-        })
-      } catch {}
+      sendPresence({
+        type: 'HEARTBEAT',
+        id: tabId,
+        device: deviceType,
+        page: activePage
+      })
 
       if (changed) refreshViewers()
-    }, 2000)
+    }, 3500)
 
     const handleExit = () => {
+      sendPresence({ type: 'LEAVE', id: tabId })
       try {
-        channel?.postMessage({ type: 'LEAVE', id: tabId })
-        channel?.close()
-        localStorage.setItem(
-          'portfolio_live_presence_event',
-          JSON.stringify({ type: 'LEAVE', id: tabId, time: Date.now() })
-        )
+        localChannel?.close()
       } catch {}
     }
 
@@ -170,7 +179,6 @@ export default function Navbar({ activePage, onNavigate, theme, onToggleTheme })
 
     return () => {
       clearInterval(interval)
-      window.removeEventListener('storage', handleStorage)
       window.removeEventListener('beforeunload', handleExit)
       window.removeEventListener('pagehide', handleExit)
       handleExit()
