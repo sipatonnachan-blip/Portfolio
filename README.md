@@ -2,6 +2,8 @@
 
 Full-stack developer portfolio, built with **React** and **Tailwind CSS** (via Vite).
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sipatonnachan-blip/Portfolio)
+
 ## Tech Stack
 
 - **React 18** — component-driven UI
