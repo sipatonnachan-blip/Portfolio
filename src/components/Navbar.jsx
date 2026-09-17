@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon'
 import { NAV_ITEMS } from '../data/navigation'
 import { PROFILE } from '../data/contact'
@@ -7,6 +7,11 @@ export default function Navbar({ activePage, onNavigate, theme, onToggleTheme })
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [viewerCount, setViewerCount] = useState(1)
+  const [viewersList, setViewersList] = useState([])
+  const [showViewersPopup, setShowViewersPopup] = useState(false)
+  const popupRef = useRef(null)
+  const tabIdRef = useRef('tab_' + Math.random().toString(36).substring(2, 9))
+  const channelRef = useRef(null)
 
   // Scroll detection for enhanced frosted glass effect
   useEffect(() => {
@@ -17,59 +22,186 @@ export default function Navbar({ activePage, onNavigate, theme, onToggleTheme })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Live multi-tab visitor counter
+  // Zero-Reload Real-Time Presence using BroadcastChannel API + Storage Events
   useEffect(() => {
-    const tabId = Math.random().toString(36).substring(2, 9)
-    const storageKey = 'portfolio_active_tabs'
+    const tabId = tabIdRef.current
+    const activeMap = new Map()
 
-    const syncPresence = () => {
-      try {
-        const now = Date.now()
-        const raw = localStorage.getItem(storageKey)
-        const tabs = raw ? JSON.parse(raw) : {}
+    // Add self to local active map
+    activeMap.set(tabId, {
+      id: tabId,
+      label: 'You (Current Tab)',
+      page: activePage,
+      isSelf: true,
+      lastSeen: Date.now()
+    })
 
-        const active = {}
-        for (const [id, timestamp] of Object.entries(tabs)) {
-          if (now - timestamp < 6000) {
-            active[id] = timestamp
+    const refreshViewers = () => {
+      const list = Array.from(activeMap.values())
+      setViewersList(list)
+      setViewerCount(Math.max(1, list.length))
+    }
+
+    let channel = null
+    try {
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        channel = new BroadcastChannel('christian_portfolio_live_presence')
+        channelRef.current = channel
+
+        channel.onmessage = (event) => {
+          const { type, id, page } = event.data || {}
+          if (!id || id === tabId) return
+
+          const now = Date.now()
+
+          if (type === 'JOIN') {
+            activeMap.set(id, {
+              id,
+              label: `Viewer ${activeMap.size + 1}`,
+              page: page || 'home',
+              isSelf: false,
+              lastSeen: now
+            })
+            refreshViewers()
+            // Immediately ACK so the new tab instantly discovers us without reload
+            channel.postMessage({
+              type: 'ACK',
+              id: tabId,
+              page: activePage
+            })
+          } else if (type === 'ACK' || type === 'HEARTBEAT') {
+            if (!activeMap.has(id)) {
+              activeMap.set(id, {
+                id,
+                label: `Viewer ${activeMap.size + 1}`,
+                page: page || 'home',
+                isSelf: false,
+                lastSeen: now
+              })
+            } else {
+              const existing = activeMap.get(id)
+              existing.lastSeen = now
+              if (page) existing.page = page
+            }
+            refreshViewers()
+          } else if (type === 'PAGE_CHANGE') {
+            if (activeMap.has(id)) {
+              activeMap.get(id).page = page
+              activeMap.get(id).lastSeen = now
+              refreshViewers()
+            }
+          } else if (type === 'LEAVE') {
+            activeMap.delete(id)
+            refreshViewers()
           }
         }
 
-        active[tabId] = now
-        localStorage.setItem(storageKey, JSON.stringify(active))
-        setViewerCount(Math.max(1, Object.keys(active).length))
-      } catch {
-        setViewerCount(1)
+        // Announce join instantly across all tabs
+        channel.postMessage({
+          type: 'JOIN',
+          id: tabId,
+          page: activePage
+        })
       }
-    }
+    } catch {}
 
-    syncPresence()
-    const interval = setInterval(syncPresence, 2500)
-
-    const handleStorageChange = (e) => {
-      if (e.key === storageKey && e.newValue) {
+    // Fallback sync via localStorage storage event for separate browser windows
+    const handleStorage = (e) => {
+      if (e.key === 'portfolio_live_presence_event' && e.newValue) {
         try {
-          const tabs = JSON.parse(e.newValue)
-          setViewerCount(Math.max(1, Object.keys(tabs).length))
+          const data = JSON.parse(e.newValue)
+          if (data.id && data.id !== tabId) {
+            if (data.type === 'LEAVE') {
+              activeMap.delete(data.id)
+            } else {
+              activeMap.set(data.id, {
+                id: data.id,
+                label: `Viewer ${activeMap.size + 1}`,
+                page: data.page || 'home',
+                isSelf: false,
+                lastSeen: Date.now()
+              })
+            }
+            refreshViewers()
+          }
         } catch {}
       }
     }
+    window.addEventListener('storage', handleStorage)
 
-    window.addEventListener('storage', handleStorageChange)
+    // Broadcast periodic heartbeat every 2 seconds and purge stale tabs (> 5s)
+    const interval = setInterval(() => {
+      const now = Date.now()
+      let changed = false
+
+      for (const [id, viewer] of activeMap.entries()) {
+        if (id !== tabId && now - viewer.lastSeen > 5500) {
+          activeMap.delete(id)
+          changed = true
+        }
+      }
+
+      try {
+        channel?.postMessage({
+          type: 'HEARTBEAT',
+          id: tabId,
+          page: activePage
+        })
+      } catch {}
+
+      if (changed) refreshViewers()
+    }, 2000)
+
+    const handleExit = () => {
+      try {
+        channel?.postMessage({ type: 'LEAVE', id: tabId })
+        channel?.close()
+        localStorage.setItem(
+          'portfolio_live_presence_event',
+          JSON.stringify({ type: 'LEAVE', id: tabId, time: Date.now() })
+        )
+      } catch {}
+    }
+
+    window.addEventListener('beforeunload', handleExit)
+    window.addEventListener('pagehide', handleExit)
+
+    refreshViewers()
 
     return () => {
       clearInterval(interval)
-      window.removeEventListener('storage', handleStorageChange)
-      try {
-        const raw = localStorage.getItem(storageKey)
-        if (raw) {
-          const tabs = JSON.parse(raw)
-          delete tabs[tabId]
-          localStorage.setItem(storageKey, JSON.stringify(tabs))
-        }
-      } catch {}
+      window.removeEventListener('storage', handleStorage)
+      window.removeEventListener('beforeunload', handleExit)
+      window.removeEventListener('pagehide', handleExit)
+      handleExit()
     }
   }, [])
+
+  // Instantly broadcast active section navigation across tabs
+  useEffect(() => {
+    try {
+      if (channelRef.current && tabIdRef.current) {
+        channelRef.current.postMessage({
+          type: 'PAGE_CHANGE',
+          id: tabIdRef.current,
+          page: activePage
+        })
+      }
+    } catch {}
+  }, [activePage])
+
+  // Close audience dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (popupRef.current && !popupRef.current.contains(e.target)) {
+        setShowViewersPopup(false)
+      }
+    }
+    if (showViewersPopup) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showViewersPopup])
 
   const handleNav = (id) => {
     onNavigate(id)
@@ -126,16 +258,64 @@ export default function Navbar({ activePage, onNavigate, theme, onToggleTheme })
 
           {/* Right Action Tools: Visitor Badge & Theme Toggle */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Live visitor badge */}
-            <div
-              className="hidden lg:flex items-center gap-1.5 rounded-full border border-border/70 bg-bg-alt/60 px-2.5 py-1 font-mono text-[11px] text-text-mid"
-              title="Real-time multi-tab session presence"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              <span>{viewerCount} Viewer/s</span>
+            {/* Live real-time viewer badge with interactive audience popover */}
+            <div className="relative" ref={popupRef}>
+              <button
+                type="button"
+                onClick={() => setShowViewersPopup((prev) => !prev)}
+                className="hidden lg:flex items-center gap-1.5 rounded-full border border-border/70 bg-bg-alt/60 px-3 py-1 font-mono text-[11px] text-text-mid transition-all duration-200 hover:border-emerald-500/50 hover:bg-bg-alt hover:text-text cursor-pointer active:scale-95"
+                title="Click to view real-time audience breakdown"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                <span className="font-semibold">{viewerCount} Viewer/s</span>
+                <span className="text-[9px] text-text-light">▾</span>
+              </button>
+
+              {/* Interactive Live Viewers Popover */}
+              {showViewersPopup && (
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-border bg-bg-card/95 p-3.5 shadow-2xl backdrop-blur-xl animate-fade-in-up z-50">
+                  <div className="flex items-center justify-between border-b border-border/60 pb-2 mb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                      </span>
+                      <span className="font-mono text-xs font-bold text-text">Live Audience</span>
+                    </div>
+                    <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-emerald-500">
+                      {viewerCount} Active
+                    </span>
+                  </div>
+
+                  {/* List of active viewers */}
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                    {viewersList.map((v, idx) => (
+                      <div
+                        key={v.id}
+                        className="flex items-center justify-between rounded-xl bg-bg-alt/80 px-2.5 py-1.5 font-mono text-xs border border-border/40"
+                      >
+                        <div className="flex items-center gap-2 truncate pr-2">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                          <span className={`truncate ${v.isSelf ? 'font-bold text-text' : 'text-text-mid'}`}>
+                            {v.isSelf ? 'You (Current Tab)' : `Viewer ${idx + 1}`}
+                          </span>
+                        </div>
+                        <span className="text-[10px] capitalize text-text-light font-medium bg-bg-card px-2 py-0.5 rounded-md border border-border/50 shrink-0">
+                          {v.page || 'Home'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-2.5 border-t border-border/50 pt-2 flex items-center justify-between font-mono text-[10px] text-text-light">
+                    <span>⚡ Instant sync (No reload)</span>
+                    <span className="text-emerald-500 font-semibold">● Connected</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Theme Toggle Button */}
