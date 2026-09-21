@@ -5,34 +5,10 @@ import { TECH_STACK_CATEGORIES } from '../data/techStack'
 import Icon from '../components/Icon'
 
 const METRICS = [
-  {
-    value: '15+',
-    label: 'Production Projects',
-    subtext: 'Web apps & enterprise systems',
-    icon: 'folder-outline',
-    target: 'projects',
-  },
-  {
-    value: '2+ Yrs',
-    label: 'Shipping Experience',
-    subtext: 'Production web development',
-    icon: 'time-outline',
-    target: 'experience',
-  },
-  {
-    value: '5+',
-    label: 'Core Stacks',
-    subtext: 'Laravel, React, Node, MySQL, Cloud',
-    icon: 'code-slash-outline',
-    target: 'tech stack',
-  },
-  {
-    value: '100%',
-    label: 'Reliability & Dedication',
-    subtext: 'Clean architecture & tested code',
-    icon: 'shield-checkmark-outline',
-    target: 'contact',
-  },
+  { value: '15+', label: 'Production Projects', icon: 'folder-outline', target: 'projects' },
+  { value: '2+ Yrs', label: 'Shipping Experience', icon: 'time-outline', target: 'experience' },
+  { value: '5+', label: 'Core Stacks', icon: 'code-slash-outline', target: 'tech stack' },
+  { value: '100%', label: 'Reliability & Dedication', icon: 'shield-checkmark-outline', target: 'contact' },
 ]
 
 export default function Home({ onNavigate }) {
@@ -68,10 +44,6 @@ export default function Home({ onNavigate }) {
             <span className="font-semibold text-text">Node.js</span>, and fluid, responsive frontends with{' '}
             <span className="font-semibold text-text">React</span> &amp;{' '}
             <span className="font-semibold text-text">Tailwind CSS</span>.
-          </p>
-
-          <p className="mt-2 text-sm leading-relaxed text-text-light">
-            I love turning complex data problems into clean, reliable applications that people actually enjoy using.
           </p>
 
           {/* Action Row with Clean & Visible Red Slashing Hover Animation */}
@@ -164,9 +136,6 @@ export default function Home({ onNavigate }) {
                 <h3 className="font-sans text-xs font-semibold text-text mt-0.5">
                   {item.label}
                 </h3>
-                <p className="mt-1 text-[11px] leading-relaxed text-text-light">
-                  {item.subtext}
-                </p>
               </div>
             </div>
           ))}
@@ -282,10 +251,7 @@ export default function Home({ onNavigate }) {
                     />
                   </div>
                   <div className="p-5 sm:p-6">
-                    <span className="font-mono text-[10px] text-text-light uppercase tracking-wider">
-                      PRODUCTION APPLICATION
-                    </span>
-                    <h3 className="mt-1 font-sans text-lg font-bold text-text transition-colors group-hover:text-primary">
+                    <h3 className="font-sans text-lg font-bold text-text transition-colors group-hover:text-primary">
                       {project.title}
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-text-mid">
@@ -297,8 +263,7 @@ export default function Home({ onNavigate }) {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-border/60 px-6 py-3 font-mono text-xs">
-                  <span className="text-text-light">Laravel &amp; React</span>
+                <div className="flex items-center justify-end border-t border-border/60 px-6 py-3 font-mono text-xs">
                   <button
                     onClick={() => onNavigate('projects')}
                     className="inline-flex items-center gap-1 font-semibold text-text hover:underline"

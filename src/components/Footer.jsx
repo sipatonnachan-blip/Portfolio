@@ -1,7 +1,7 @@
 import Icon from './Icon'
 import { PROFILE, SOCIALS } from '../data/contact'
 
-export default function Footer({ onNavigate }) {
+export default function Footer({ onOpenSecurityDemo }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -41,6 +41,18 @@ export default function Footer({ onNavigate }) {
               </a>
             ))}
           </div>
+
+          <button
+            onClick={onOpenSecurityDemo}
+            title="See what this page already knows about you"
+            className="group flex items-center gap-1.5 rounded-lg border border-border bg-bg-alt/50 px-2.5 py-1.5 font-mono text-xs text-text-light transition-all duration-200 hover:border-text-mid hover:text-text"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 transition-transform group-hover:scale-125" />
+            <span>What we know about you</span>
+            <kbd className="hidden rounded border border-border px-1 text-[10px] text-text-light sm:inline">
+              Alt+K
+            </kbd>
+          </button>
 
           <div className="h-4 w-px bg-border" />
 

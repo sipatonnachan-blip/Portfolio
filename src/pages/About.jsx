@@ -1,12 +1,13 @@
 import Icon from '../components/Icon'
 import { ABOUT_PARAGRAPHS, SERVICES } from '../data/about'
+import { PROFILE } from '../data/contact'
 
+// Specialty and deployment facts live on the Tech Stack page; repeating them
+// here just made the table longer without saying anything new.
 const FAST_FACTS = [
   { label: 'Current Role', value: "Full-Stack Developer @ DSG Son's Group, Inc." },
-  { label: 'Location', value: 'Davao City, Philippines' },
+  { label: 'Location', value: PROFILE.location },
   { label: 'Experience', value: '2+ Years Building & Shipping Production Web Apps' },
-  { label: 'Core Specialty', value: 'Laravel & PHP Backends • React & Tailwind Frontends' },
-  { label: 'Deployment', value: 'Nginx, Linux Server Administration, Render & Cloud' },
 ]
 
 export default function About() {
@@ -21,11 +22,9 @@ export default function About() {
         <h1 className="mt-3 font-sans text-3xl font-extrabold tracking-tight text-text sm:text-4xl">
           About Christian Delapos
         </h1>
-        <div className="mt-5 space-y-4 text-base leading-relaxed text-text-mid">
-          {ABOUT_PARAGRAPHS.map((paragraph, i) => (
-            <p key={i} className={i === 0 ? 'text-text font-medium' : 'text-text-mid'}>
-              {paragraph}
-            </p>
+        <div className="mt-4 max-w-2xl space-y-3 text-sm leading-relaxed text-text-mid sm:text-base">
+          {ABOUT_PARAGRAPHS.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
       </div>

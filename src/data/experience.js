@@ -27,7 +27,6 @@ export const EXPERIENCE = [
     company: 'Davao Oriental State University',
     date: '2021 - 2025',
     highlights: [
-      'Provided IT support while completing BS in Information Technology',
       'Assisted with hardware and software maintenance',
       'Troubleshot technical issues for faculty and students',
     ],

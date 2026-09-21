@@ -1,6 +1,7 @@
+// Kept to a single lede — the role, location, stack and shipping record all
+// appear again in Quick Facts and the service cards below.
 export const ABOUT_PARAGRAPHS = [
-  "I'm a full-stack web developer based in Davao City, Philippines. I specialize in building production-grade web applications using modern tech stacks. My focus is on writing clean, maintainable code and delivering features that solve real business problems.",
-  "I currently work at DSG Son's Group, Inc. as a full-stack developer, where I've built and shipped 2+ major applications. I'm passionate about learning new frameworks and using the right tools for the job—whether that's PHP/Laravel for robust backends or React/Vue for interactive frontends.",
+  "Full-stack developer in Davao City. I build and ship production web applications end to end — clean, maintainable code that solves real business problems.",
 ]
 
 export const SERVICES = [
@@ -8,24 +9,24 @@ export const SERVICES = [
     icon: 'code-slash-outline',
     title: 'Full-Stack Applications',
     description:
-      'Laravel + PHP backends with secure authentication, optimized MySQL databases, and Nginx production deployments. Complete feature ownership from code to production.',
+      'Complete feature ownership, from schema and secure authentication through to a deployed production server.',
   },
   {
     icon: 'phone-portrait-outline',
     title: 'Responsive Interfaces',
     description:
-      'Mobile-first design with Tailwind CSS, semantic HTML, vanilla JavaScript. Building interactive UIs with React & Vue.js for better user experiences.',
+      'Mobile-first, semantic, accessible interfaces that hold up on every screen size.',
   },
   {
     icon: 'git-network-outline',
     title: 'Production Quality',
     description:
-      'Git workflow, clean code practices, tested thoroughly. Real deployment experience with Nginx, Render, and cloud platforms. Code that ships confidently.',
+      'Reviewed commits, tested changes, and real deployment experience. Code that ships confidently.',
   },
   {
     icon: 'cloud-done-outline',
     title: 'System Administration',
     description:
-      'Hardware setup, software configuration, system maintenance. Troubleshooting and support to keep development teams productive and systems running reliably.',
+      'Server setup, maintenance, and troubleshooting that keeps a development team unblocked.',
   },
 ]

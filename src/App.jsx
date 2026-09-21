@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ImageModal from './components/ImageModal'
+import SecurityDemoChat from './components/SecurityDemoChat'
 import { useTheme } from './hooks/useTheme'
+import { useAltHotkey } from './hooks/useHotkey'
 import Home from './pages/Home'
 import TechStack from './pages/TechStack'
 import Projects from './pages/Projects'
@@ -23,7 +25,11 @@ export default function App() {
   const [activePage, setActivePage] = useState('home')
   const [modalImage, setModalImage] = useState(null)
   const [modalAlt, setModalAlt] = useState('')
+  const [securityDemoOpen, setSecurityDemoOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
+
+  // Alt+K opens the security awareness demo.
+  useAltHotkey('KeyK', useCallback(() => setSecurityDemoOpen((open) => !open), []))
 
   const handleNavigate = (pageId) => {
     setActivePage(pageId)
@@ -42,6 +48,11 @@ export default function App() {
   return (
     <>
       <ImageModal image={modalImage} alt={modalAlt} onClose={closeImage} />
+
+      <SecurityDemoChat
+        open={securityDemoOpen}
+        onClose={() => setSecurityDemoOpen(false)}
+      />
 
       <div className="flex min-h-screen flex-col bg-bg text-text antialiased transition-colors duration-250">
         <Navbar
@@ -63,7 +74,7 @@ export default function App() {
           </div>
         </main>
 
-        <Footer onNavigate={handleNavigate} />
+        <Footer onOpenSecurityDemo={() => setSecurityDemoOpen(true)} />
       </div>
     </>
   )

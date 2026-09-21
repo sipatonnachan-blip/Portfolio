@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Icon from '../components/Icon'
 import { CONTACT_OPTIONS, PROFILE } from '../data/contact'
+import LocationMap from '../components/LocationMap'
 
 export default function Contact() {
   const [copied, setCopied] = useState(false)
@@ -23,9 +24,11 @@ export default function Contact() {
           Get in Touch
         </h1>
         <p className="mt-3 text-base leading-relaxed text-text-mid">
-          Have a web project in mind, an opportunity, or want to collaborate on full-stack development? Feel free to reach out directly.
+          Fastest by email. Everything else below works too.
         </p>
       </div>
+
+      <LocationMap />
 
       {/* Copy Email Quick Box */}
       <div className="flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-bg-card p-6 sm:flex-row sm:items-center sm:p-8">
