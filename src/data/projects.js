@@ -1,6 +1,9 @@
+// Drives both the Home showcase deck and the Projects page. `badge` is the
+// headline pill on the deck card; tag chips are derived from `tech`.
 export const FEATURED_PROJECTS = [
   {
     title: 'Monthly Tracker',
+    badge: '#1 FINANCE APP',
     description: 'Expense tracking app for personal finances',
     tech: 'Laravel • MySQL • Tailwind • Render',
     image: '/images/case 1.png',
@@ -8,17 +11,19 @@ export const FEATURED_PROJECTS = [
   },
   {
     title: 'ScheduLink',
+    badge: '#1 SCHEDULING SUITE',
     description: 'Advanced scheduling and event management system',
     tech: 'Laravel • React • MySQL • Nginx',
     image: '/images/dashboard-schedulink.png',
-    link: '#',
+    link: null,
   },
   {
     title: 'Weevil Suite',
+    badge: '#1 GEOSPATIAL HUB',
     description: 'Multi-page geospatial data platform with mapping',
     tech: 'Laravel • JavaScript • MySQL • Nginx',
     image: '/images/pro (1).png',
-    link: '#',
+    link: null,
   },
 ]
 

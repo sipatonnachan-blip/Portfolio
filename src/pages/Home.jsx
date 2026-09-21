@@ -1,20 +1,10 @@
 import { Mascot } from 'page-mascot'
 import { PROFILE, SOCIALS } from '../data/contact'
-import { FEATURED_PROJECTS } from '../data/projects'
 import { TECH_STACK_CATEGORIES } from '../data/techStack'
 import Icon from '../components/Icon'
+import ProjectShowcaseDeck from '../components/ProjectShowcaseDeck'
 
-const METRICS = [
-  { value: '15+', label: 'Production Projects', icon: 'folder-outline', target: 'projects' },
-  { value: '2+ Yrs', label: 'Shipping Experience', icon: 'time-outline', target: 'experience' },
-  { value: '5+', label: 'Core Stacks', icon: 'code-slash-outline', target: 'tech stack' },
-  { value: '100%', label: 'Reliability & Dedication', icon: 'shield-checkmark-outline', target: 'contact' },
-]
-
-export default function Home({ onNavigate }) {
-  const flagship = FEATURED_PROJECTS[0]
-  const secondaryProjects = FEATURED_PROJECTS.slice(1, 3)
-
+export default function Home({ onNavigate, onOpenSecurityDemo }) {
   return (
     <div className="space-y-20 py-4 sm:py-8">
       {/* ── 1. Hero Section with Interactive Mascot Pedestal ── */}
@@ -89,7 +79,7 @@ export default function Home({ onNavigate }) {
                 </a>
               ))}
             </div>
-          </div>
+          </div>          
         </div>
 
         {/* Right: Interactive Real Photo Mascot Pedestal */}
@@ -112,37 +102,7 @@ export default function Home({ onNavigate }) {
         </div>
       </section>
 
-      {/* ── 2. Bento Metrics Grid ── */}
-      <section>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {METRICS.map((item) => (
-            <div
-              key={item.label}
-              onClick={() => onNavigate(item.target)}
-              className="group cursor-pointer rounded-2xl border border-border bg-bg-card p-5 transition-all duration-200 hover:-translate-y-1 hover:border-text-mid/70 hover:shadow-lg"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-bg-alt text-text transition-colors group-hover:border-text-mid group-hover:bg-text group-hover:text-secondary">
-                  <Icon name={item.icon} className="text-base" />
-                </div>
-                <span className="font-mono text-xs text-text-light/50 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-text">
-                  ↗
-                </span>
-              </div>
-              <div className="mt-4">
-                <span className="font-mono text-2xl font-bold tracking-tight text-text transition-colors group-hover:text-primary">
-                  {item.value}
-                </span>
-                <h3 className="font-sans text-xs font-semibold text-text mt-0.5">
-                  {item.label}
-                </h3>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 3. Featured Work Spotlight (Replaces Fanned Deck) ── */}
+      {/* ── 3. Featured Work Deck ── */}
       <section className="space-y-6">
         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
           <div>
@@ -163,119 +123,7 @@ export default function Home({ onNavigate }) {
           </button>
         </div>
 
-        {/* Bento Showcase: Hero Flagship + Dual Cards */}
-        <div className="space-y-6">
-          {/* Flagship Card */}
-          {flagship && (
-            <div className="group overflow-hidden rounded-3xl border border-border bg-bg-card transition-all duration-300 hover:border-text-mid/70 hover:shadow-xl">
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                {/* Visual Thumbnail Preview */}
-                <div className="relative min-h-[260px] overflow-hidden border-b border-border bg-bg-alt lg:col-span-7 lg:border-b-0 lg:border-r">
-                  <img
-                    src={flagship.image}
-                    alt={flagship.title}
-                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                </div>
-
-                {/* Content & Details */}
-                <div className="flex flex-col justify-between p-6 sm:p-8 lg:col-span-5">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full border border-border bg-bg-alt px-2.5 py-0.5 font-mono text-[10px] font-semibold text-text">
-                        FLAGSHIP
-                      </span>
-                      <span className="font-mono text-[11px] text-text-light">
-                        Personal Finance App
-                      </span>
-                    </div>
-
-                    <h3 className="mt-3 font-sans text-xl font-bold text-text transition-colors group-hover:text-primary sm:text-2xl">
-                      {flagship.title}
-                    </h3>
-
-                    <p className="mt-3 text-xs leading-relaxed text-text-mid sm:text-sm">
-                      {flagship.description}
-                    </p>
-
-                    <div className="mt-4 flex flex-wrap gap-1.5 font-mono text-[11px]">
-                      {flagship.tech.split('•').map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-lg border border-border bg-bg-alt px-2.5 py-1 text-text-mid"
-                        >
-                          {t.trim()}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center gap-3 pt-4 border-t border-border/60">
-                    {flagship.link && (
-                      <a
-                        href={flagship.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-text px-4 py-2 font-mono text-xs font-semibold text-secondary transition-all hover:opacity-90"
-                      >
-                        <span>Live Demo</span>
-                        <span>↗</span>
-                      </a>
-                    )}
-                    <button
-                      onClick={() => onNavigate('projects')}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-bg-alt px-4 py-2 font-mono text-xs font-medium text-text transition-colors hover:border-text-mid"
-                    >
-                      <span>Case Details</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Secondary Dual Grid */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {secondaryProjects.map((project) => (
-              <div
-                key={project.title}
-                className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-bg-card transition-all duration-300 hover:-translate-y-1.5 hover:border-text-mid/70 hover:shadow-xl"
-              >
-                <div>
-                  <div className="relative h-[200px] w-full overflow-hidden border-b border-border bg-bg-alt">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="p-5 sm:p-6">
-                    <h3 className="font-sans text-lg font-bold text-text transition-colors group-hover:text-primary">
-                      {project.title}
-                    </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-text-mid">
-                      {project.description}
-                    </p>
-                    <p className="mt-3 font-mono text-[11px] text-text-light truncate">
-                      {project.tech}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end border-t border-border/60 px-6 py-3 font-mono text-xs">
-                  <button
-                    onClick={() => onNavigate('projects')}
-                    className="inline-flex items-center gap-1 font-semibold text-text hover:underline"
-                  >
-                    <span>View Project</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <ProjectShowcaseDeck onNavigate={onNavigate} />
       </section>
 
       {/* ── 4. Tech Stack Sneak Peek ── */}

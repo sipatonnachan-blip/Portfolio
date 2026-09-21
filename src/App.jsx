@@ -67,7 +67,11 @@ export default function App() {
             {activePage === 'projects' ? (
               <ActivePageComponent onOpenImage={openImage} />
             ) : activePage === 'home' ? (
-              <ActivePageComponent onNavigate={handleNavigate} theme={theme} />
+              <ActivePageComponent
+                onNavigate={handleNavigate}
+                theme={theme}
+                onOpenSecurityDemo={() => setSecurityDemoOpen(true)}
+              />
             ) : (
               <ActivePageComponent />
             )}

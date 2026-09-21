@@ -1,6 +1,15 @@
 import { EXPERIENCE, EDUCATION } from '../data/experience'
 import Icon from '../components/Icon'
 
+// Summary strip above the roles. Static here rather than clickable as it was
+// on Home: one of these used to link to this very page.
+const METRICS = [
+  { value: '6+', label: 'Production Projects', icon: 'folder-outline' },
+  { value: '1+ Yrs', label: 'Experience', icon: 'time-outline' },
+  { value: '5+', label: 'Core Stacks', icon: 'code-slash-outline' },
+  { value: '99%', label: 'Reliability & Dedication', icon: 'shield-checkmark-outline' },
+]
+
 export default function Experience() {
   return (
     <div className="w-full space-y-16 py-4 sm:py-8">
@@ -17,6 +26,30 @@ export default function Experience() {
           Professional positions, system development milestones, and academic background.
         </p>
       </div>
+
+      {/* At a glance */}
+      <section>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {METRICS.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-2xl border border-border bg-bg-card p-5 transition-colors duration-200 hover:border-text-mid/70"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-bg-alt text-text">
+                <Icon name={item.icon} className="text-base" />
+              </div>
+              <div className="mt-4">
+                <span className="font-mono text-2xl font-bold tracking-tight text-text">
+                  {item.value}
+                </span>
+                <h3 className="mt-0.5 font-sans text-xs font-semibold text-text">
+                  {item.label}
+                </h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Career Roles */}
       <section className="space-y-6">
