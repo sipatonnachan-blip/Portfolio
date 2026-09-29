@@ -3,18 +3,30 @@ import Icon from './Icon'
 import { NAV_ITEMS } from '../data/navigation'
 import { PROFILE, SOCIALS } from '../data/contact'
 import { usePresence } from '../hooks/usePresence'
+import { photo } from '../utils/images'
 
 const YEAR = new Date().getFullYear()
 
 // Profile photo that turns shy: crossfades to the shy shot on hover, and on
-// click/tap shows it for a moment (touch screens have no hover).
+// click/tap shows it for a moment (touch screens have no hover). The shy shot
+// isn't downloaded with the page: it loads once the page is idle, or the
+// moment someone points at the photo, whichever comes first.
 function ShyAvatar({ onClick, className, ring }) {
   const [shy, setShy] = useState(false)
+  const [loadShy, setLoadShy] = useState(false)
   const timerRef = useRef(null)
 
   useEffect(() => () => window.clearTimeout(timerRef.current), [])
 
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((cb) => window.setTimeout(cb, 2500))
+    const cancel = window.cancelIdleCallback ?? window.clearTimeout
+    const handle = idle(() => setLoadShy(true), { timeout: 4000 })
+    return () => cancel(handle)
+  }, [])
+
   const handleClick = () => {
+    setLoadShy(true)
     setShy(true)
     window.clearTimeout(timerRef.current)
     timerRef.current = window.setTimeout(() => setShy(false), 1400)
@@ -24,24 +36,34 @@ function ShyAvatar({ onClick, className, ring }) {
   return (
     <button
       onClick={handleClick}
+      onPointerEnter={() => setLoadShy(true)}
+      onFocus={() => setLoadShy(true)}
       aria-label="Go to home"
       className={`group relative flex-shrink-0 overflow-hidden rounded-full bg-bg-alt ${ring} ${className}`}
     >
       <img
-        src={PROFILE.avatar}
+        src={photo(PROFILE.avatar)}
         alt={PROFILE.name}
+        width={112}
+        height={112}
+        decoding="async"
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-0 ${
           shy ? 'opacity-0' : 'opacity-100'
         }`}
       />
-      <img
-        src={PROFILE.avatarHover}
-        alt=""
-        aria-hidden="true"
-        className={`absolute inset-0 h-full w-full object-cover object-[50%_30%] transition-all duration-300 group-hover:scale-105 group-hover:opacity-100 ${
-          shy ? 'scale-105 opacity-100' : 'opacity-0'
-        }`}
-      />
+      {loadShy && (
+        <img
+          src={photo(PROFILE.avatarHover)}
+          alt=""
+          aria-hidden="true"
+          width={112}
+          height={112}
+          decoding="async"
+          className={`absolute inset-0 h-full w-full object-cover object-[50%_30%] transition-all duration-300 group-hover:scale-105 group-hover:opacity-100 ${
+            shy ? 'scale-105 opacity-100' : 'opacity-0'
+          }`}
+        />
+      )}
     </button>
   )
 }
@@ -229,8 +251,11 @@ export default function Sidebar({ activePage, onNavigate, theme, onToggleTheme, 
         <div className="flex items-center justify-between gap-3">
           <button onClick={() => handleNav('home')} className="flex min-w-0 items-center gap-2.5 text-left">
             <img
-              src={PROFILE.avatar}
+              src={photo(PROFILE.avatar)}
               alt=""
+              width={36}
+              height={36}
+              decoding="async"
               className="h-9 w-9 flex-shrink-0 rounded-full object-cover ring-2 ring-border"
             />
             <span className="min-w-0">

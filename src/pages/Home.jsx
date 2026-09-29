@@ -5,6 +5,7 @@ import { FEATURED_PROJECTS, ALL_PROJECTS, GITHUB_REPOS } from '../data/projects'
 import { ABOUT_PARAGRAPHS, SERVICES } from '../data/about'
 import { EXPERIENCE, EDUCATION } from '../data/experience'
 import Icon from '../components/Icon'
+import { photo, thumb } from '../utils/images'
 
 const TOOLS = LOGO_SKILLS
 
@@ -136,9 +137,10 @@ export default function Home({ onNavigate }) {
                     className="relative min-h-[100px] overflow-hidden rounded-xl border border-border bg-bg-alt shadow-sm"
                   >
                     <img
-                      src={project.image}
+                      src={thumb(project.image)}
                       alt={project.title}
                       loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
                     <span className="absolute bottom-2 left-2 rounded-md bg-black/70 px-2 py-0.5 font-mono text-[10px] font-semibold text-white">
@@ -162,13 +164,17 @@ export default function Home({ onNavigate }) {
             <div className="flex flex-1 items-center justify-center pt-4">
               <div className="relative h-36 w-32">
                 <img
-                  src={PROFILE.avatarNight}
+                  src={photo(PROFILE.avatarNight)}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full -translate-x-5 -rotate-[14deg] rounded-xl border-4 border-bg-card object-cover shadow-md"
                 />
                 <img
-                  src={PROFILE.avatarHover}
+                  src={photo(PROFILE.avatarHover)}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full -translate-x-2.5 -rotate-[7deg] rounded-xl border-4 border-bg-card object-cover shadow-md"
                 />
                 {/* Poking the mascot should not navigate away */}

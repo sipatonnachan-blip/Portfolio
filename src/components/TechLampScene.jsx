@@ -69,10 +69,46 @@ function SmokeWisp({ width, height, delay = 0, duration = 3, mirror = false, cla
 
 // Landed beside the spill, facing the puddle (to its right)
 const LANDED_POSE = { rot: 0, flip: 1 }
-// Where the firefly lands, as a fraction of the puddle's box: just past the
-// puddle's left edge on dry desk (hot coffee would be the end of it)
-const LAND_AT = { x: -0.18, y: 0.5 }
-const PUDDLE = { width: 150, height: 14, bottom: 3 }
+const PUDDLE = { height: 14, bottom: 3 }
+
+// Where things sit on the desk. The wide layout spreads out; the compact one
+// (narrow scenes, i.e. phones) puts me in the middle, a smaller lamp on the
+// left and the mug on the far right, with a smaller puddle between us so the
+// firefly has dry desk to land on. `landX` is where it lands as a fraction of
+// the puddle's width: just past its left edge (hot coffee would be the end
+// of it).
+const LAYOUTS = {
+  wide: {
+    lampLeft: '7%',
+    lampScale: 1,
+    meLeft: '62%',
+    meScale: 1,
+    mugRight: '7%',
+    puddleRight: 'calc(7% + 44px)',
+    puddleWidth: 150,
+    landX: -0.18,
+    bubbleWidth: 224,
+    bubbleShift: '-25%',
+    // how far above my head the bubble floats (in my own, unscaled pixels)
+    bubbleLift: 52,
+  },
+  compact: {
+    lampLeft: '2%',
+    lampScale: 0.72,
+    meLeft: '50%',
+    meScale: 0.7,
+    mugRight: '4%',
+    puddleRight: 'calc(4% + 40px)',
+    puddleWidth: 84,
+    landX: -0.1,
+    bubbleWidth: 190,
+    bubbleShift: '-50%',
+    // higher, so it clears the lamp shade beside me
+    bubbleLift: 108,
+  },
+}
+const COMPACT_BELOW = 600
+const LAND_Y = 0.5
 
 // Old-fashioned banker's desk lamp: brass stand, green glass shade. Drawn as
 // SVG so it scales cleanly; the pull chain is a separate button on top.
@@ -270,6 +306,10 @@ export default function TechLampScene() {
   // The flying firefly turns to face the viewer while it says hi
   const [facingViewer, setFacingViewer] = useState(false)
   const [radius, setRadius] = useState(320)
+  const [compact, setCompact] = useState(false)
+  const layout = compact ? LAYOUTS.compact : LAYOUTS.wide
+  const layoutRef = useRef(layout)
+  layoutRef.current = layout
   const sceneRef = useRef(null)
   const tiltRef = useRef(null)
   const dragRef = useRef(null)
@@ -334,7 +374,7 @@ export default function TechLampScene() {
       setFacingViewer(false)
       // Re-measure: the mug/puddle may have moved if the window resized
       const mug = pointOn(mugRef.current, 0, 0.4)
-      const puddle = pointOn(puddleRef.current, LAND_AT.x, LAND_AT.y)
+      const puddle = pointOn(puddleRef.current, layoutRef.current.landX, LAND_Y)
       const alreadySpilled = spilledRef.current
       const target = alreadySpilled ? puddle : mug
       const away = cubicPoints(
@@ -354,7 +394,7 @@ export default function TechLampScene() {
           }
           // Bump! The mug goes over, and the bug bounces off and lands beside the spill.
           setSpilled(true)
-          const land = pointOn(puddleRef.current, LAND_AT.x, LAND_AT.y)
+          const land = pointOn(puddleRef.current, layoutRef.current.landX, LAND_Y)
           // Arcs back past the landing spot and comes in toward the puddle, so it
           // touches down already facing the coffee
           const bounce = cubicPoints(mug, { x: mug.x - 40, y: mug.y - 70 }, { x: land.x - 60, y: land.y - 45 }, land, 34)
@@ -390,7 +430,7 @@ export default function TechLampScene() {
       setBugPhase('lamp')
       return
     }
-    const from = pointOn(puddleRef.current, LAND_AT.x, LAND_AT.y)
+    const from = pointOn(puddleRef.current, layoutRef.current.landX, LAND_Y)
     const home = pointOn(anchor)
     const path = cubicPoints(from, { x: from.x - 40, y: from.y - 140 }, { x: home.x - 70, y: home.y - 60 }, home, 40)
     runFlight([{ pts: path, loop: false }], { start: LANDED_POSE, end: LAMP_POSE }, () => setBugPhase('lamp'))
@@ -414,13 +454,16 @@ export default function TechLampScene() {
   }, [bugPhase])
   useEffect(() => () => flyRef.current?.getAnimations().forEach((a) => a.cancel()), [])
 
-  // Size the ring to the scene so it never spills out on narrow screens.
+  // Size the ring and pick the desk layout from the scene's own width, so it
+  // never spills out or crowds on narrow screens.
   useEffect(() => {
     const el = sceneRef.current
     if (!el) return undefined
     const observer = new ResizeObserver(([entry]) => {
       const { width } = entry.contentRect
-      setRadius(Math.round(Math.min(320, Math.max(110, width * 0.3))))
+      const narrow = width < COMPACT_BELOW
+      setCompact(narrow)
+      setRadius(Math.round(Math.min(320, Math.max(110, width * (narrow ? 0.36 : 0.3)))))
     })
     observer.observe(el)
     return () => observer.disconnect()
@@ -469,8 +512,10 @@ export default function TechLampScene() {
   }
 
   const count = LOGO_SKILLS.length
-  const cardW = Math.round(radius * 0.27)
+  // Small rings get chunkier cards with just the logo, so they stay legible
+  const cardW = compact ? Math.max(46, Math.round(radius * 0.3)) : Math.round(radius * 0.27)
   const cardH = Math.round(cardW * 1.3)
+  const showNames = cardW >= 56
   // The label needs ~90px; on small rings the cards are too narrow for it.
   const showLabels = cardW >= 60
 
@@ -527,16 +572,17 @@ export default function TechLampScene() {
       {/* Spilled coffee: a puddle spreading over the desk top, dripping off the
           front edge. Anchored on the desk's front edge line. */}
       <div
-        className="pointer-events-none absolute bottom-[21.8%] right-[calc(7%+44px)] z-10 transition-[filter] duration-1000"
-        style={{ filter: on ? 'brightness(0.9)' : 'brightness(0.4)' }}
+        className="pointer-events-none absolute bottom-[21.8%] z-10 transition-[filter] duration-1000"
+        style={{ right: layout.puddleRight, filter: on ? 'brightness(0.9)' : 'brightness(0.4)' }}
         aria-hidden="true"
       >
         <div
           ref={puddleRef}
-          className={`coffee-puddle absolute bottom-[3px] right-0 h-[14px] w-[150px] origin-right rounded-[50%] transition-opacity duration-700 ${
+          className={`coffee-puddle absolute bottom-[3px] right-0 h-[14px] origin-right rounded-[50%] transition-opacity duration-700 ${
             spilled ? 'is-spilled opacity-100' : 'opacity-0'
           }`}
           style={{
+            width: layout.puddleWidth,
             background:
               'radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.22) 0%, transparent 25%), radial-gradient(ellipse, #4a2a14 0%, #3b2010 60%, #2c170b 100%)',
           }}
@@ -544,25 +590,34 @@ export default function TechLampScene() {
         {spilled && (
           <>
             {[
-              { right: 18, delay: 0.9, dur: 2.6 },
-              { right: 48, delay: 1.4, dur: 3.1 },
-              { right: 78, delay: 1.1, dur: 2.8 },
-              { right: 108, delay: 1.7, dur: 3.3 },
-              { right: 132, delay: 1.25, dur: 2.9 },
-            ].map((puff) => (
-              <SmokeWisp
-                key={puff.right}
-                width={16}
-                height={52}
-                delay={puff.delay}
-                duration={puff.dur + 0.6}
-                mirror={puff.right % 60 === 18 || puff.right === 78}
-                className="absolute bottom-[8px] blur-[0.8px]"
-                style={{ right: puff.right }}
-              />
-            ))}
-            <span className="coffee-drip absolute right-[92px] top-0 w-[6px] rounded-b-full bg-[#3b2010]" />
-            <span className="coffee-drop absolute right-[92.5px] top-[20px] h-[5px] w-[5px] rounded-full bg-[#3b2010]" />
+              { at: 0.12, delay: 0.9, dur: 2.6, mirror: true },
+              { at: 0.32, delay: 1.4, dur: 3.1, mirror: false },
+              { at: 0.52, delay: 1.1, dur: 2.8, mirror: true },
+              { at: 0.72, delay: 1.7, dur: 3.3, mirror: false },
+              { at: 0.88, delay: 1.25, dur: 2.9, mirror: false },
+            ]
+              // fewer wisps over the smaller puddle
+              .filter((_, i) => !compact || i % 2 === 0)
+              .map((puff) => (
+                <SmokeWisp
+                  key={puff.at}
+                  width={16}
+                  height={52}
+                  delay={puff.delay}
+                  duration={puff.dur + 0.6}
+                  mirror={puff.mirror}
+                  className="absolute bottom-[8px] blur-[0.8px]"
+                  style={{ right: puff.at * layout.puddleWidth }}
+                />
+              ))}
+            <span
+              className="coffee-drip absolute top-0 w-[6px] rounded-b-full bg-[#3b2010]"
+              style={{ right: layout.puddleWidth * 0.61 }}
+            />
+            <span
+              className="coffee-drop absolute top-[20px] h-[5px] w-[5px] rounded-full bg-[#3b2010]"
+              style={{ right: layout.puddleWidth * 0.61 + 0.5 }}
+            />
           </>
         )}
       </div>
@@ -570,7 +625,7 @@ export default function TechLampScene() {
       {/* The firefly once it has landed beside the coffee, facing the puddle. Same
           anchor as the puddle, but outside its darkening so the lantern can glow. */}
       {bugPhase === 'landed' && (
-        <div className="pointer-events-none absolute bottom-[21.8%] right-[calc(7%+44px)] z-10" aria-hidden="true">
+        <div className="pointer-events-none absolute bottom-[21.8%] z-10" style={{ right: layout.puddleRight }} aria-hidden="true">
           <svg
             data-firefly-now=""
             viewBox={`${BUG_BOX.x} ${BUG_BOX.y} ${BUG_BOX.w} ${BUG_BOX.h}`}
@@ -578,8 +633,8 @@ export default function TechLampScene() {
             height={BUG_H}
             className="absolute overflow-visible"
             style={{
-              left: -PUDDLE.width * (1 - LAND_AT.x) - BUG_AX,
-              top: -(PUDDLE.bottom + PUDDLE.height * (1 - LAND_AT.y)) - BUG_AY,
+              left: -layout.puddleWidth * (1 - layout.landX) - BUG_AX,
+              top: -(PUDDLE.bottom + PUDDLE.height * (1 - LAND_Y)) - BUG_AY,
             }}
           >
             <FireflySide open={false} glowing={!on} dim={!on} />
@@ -589,8 +644,8 @@ export default function TechLampScene() {
 
       {/* Coffee mug at the far end of the desk: steams, and tips over when clicked */}
       <div
-        className="absolute bottom-[26%] right-[7%] z-20 transition-[filter] duration-1000"
-        style={{ filter: on ? 'brightness(0.9)' : 'brightness(0.35)' }}
+        className="absolute bottom-[26%] z-20 transition-[filter] duration-1000"
+        style={{ right: layout.mugRight, filter: on ? 'brightness(0.9)' : 'brightness(0.35)' }}
       >
         {!spilled && (
           <div className="pointer-events-none absolute bottom-full left-1/2 flex -translate-x-1/2 gap-1 pb-0.5" aria-hidden="true">
@@ -628,7 +683,10 @@ export default function TechLampScene() {
       </div>
 
       {/* ── Lamp on the desk ── */}
-      <div className="absolute bottom-[25%] left-[3%] z-20 h-[210px] w-[200px] origin-bottom-left scale-[0.8] sm:left-[7%] sm:scale-100">
+      <div
+        className="absolute bottom-[25%] z-20 h-[210px] w-[200px] origin-bottom-left"
+        style={{ left: layout.lampLeft, transform: `scale(${layout.lampScale})` }}
+      >
         <DeskLamp on={on} />
 
         {/* Firefly on the shade, in the lamp's coordinates but outside its
@@ -673,15 +731,19 @@ export default function TechLampScene() {
 
       {/* Hint on the desk front */}
       <p
-        className={`pointer-events-none absolute bottom-[7%] left-[3%] z-20 w-[160px] text-center font-sans text-[11px] leading-snug transition-colors duration-700 sm:left-[7%] sm:w-[200px] ${
+        className={`pointer-events-none absolute bottom-[7%] z-20 text-center font-sans text-[11px] leading-snug transition-colors duration-700 ${
           on ? 'text-orange-100/70' : 'text-white/35'
         }`}
+        style={{ left: layout.lampLeft, width: compact ? 170 : 200 }}
       >
         {on ? 'Pull the chain again to switch off' : 'Pull the chain to switch on'}
       </p>
 
       {/* ── Me sitting on the desk, with a thought bubble ── */}
-      <div className="absolute bottom-[calc(22.5%-40px)] left-[74%] z-20 h-[150px] w-[100px] -translate-x-1/2 origin-bottom scale-75 sm:left-[62%] sm:scale-100">
+      <div
+        className="absolute bottom-[calc(22.5%-40px)] z-20 h-[150px] w-[100px] origin-bottom"
+        style={{ left: layout.meLeft, transform: `translateX(-50%) scale(${layout.meScale})` }}
+      >
         <div
           className="h-full w-full transition-[filter] duration-700"
           style={{ filter: on ? 'none' : 'brightness(0.5) saturate(0.6)' }}
@@ -694,6 +756,8 @@ export default function TechLampScene() {
           { size: 6, x: 58, y: -10 },
           { size: 10, x: 66, y: -26 },
           { size: 14, x: 58, y: -46 },
+          // one more to reach the raised bubble on narrow screens
+          ...(compact ? [{ size: 18, x: 48, y: -74 }] : []),
         ].map((dot, idx) => (
           <span
             key={idx}
@@ -704,24 +768,35 @@ export default function TechLampScene() {
           />
         ))}
 
-        {/* Thought bubble: the dark-room hint, dissolving as the ring appears */}
+        {/* Thought bubble: the dark-room hint, dissolving as the ring appears.
+            The outer box positions it (and undoes my scale so the text stays
+            readable); the inner one fades it. */}
         <div
-          className={`pointer-events-none absolute bottom-[calc(100%+52px)] left-1/2 w-56 -translate-x-1/4 rounded-[28px] border border-white/15 bg-white/[0.06] px-5 py-3.5 text-center shadow-lg transition-all duration-500 ${
-            on ? 'scale-125 opacity-0' : 'scale-100 opacity-100'
-          }`}
+          className="pointer-events-none absolute left-1/2 origin-bottom"
+          style={{
+            bottom: `calc(100% + ${layout.bubbleLift}px)`,
+            width: layout.bubbleWidth,
+            transform: `translateX(${layout.bubbleShift}) scale(${1 / layout.meScale})`,
+          }}
         >
-          <p className="font-sans text-[11px] leading-relaxed text-white/55 sm:text-xs">
-            It&apos;s a little dark in here…
-            <br />
-            Pull the lamp&apos;s chain to light up my stack.
-          </p>
+          <div
+            className={`rounded-[28px] border border-white/15 bg-white/[0.06] px-5 py-3.5 text-center shadow-lg transition-all duration-500 ${
+              on ? 'scale-125 opacity-0' : 'scale-100 opacity-100'
+            }`}
+          >
+            <p className="font-sans text-[11px] leading-relaxed text-white/55 sm:text-xs">
+              It&apos;s a little dark in here…
+              <br />
+              Pull the lamp&apos;s chain to light up my stack.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* ── Tech ring ── */}
       <div
-        className="absolute left-1/2 top-0 bottom-[calc(24%+170px)] flex w-0 items-center justify-center sm:left-[62%]"
-        style={{ perspective: '1100px' }}
+        className="absolute top-0 bottom-[calc(24%+170px)] flex w-0 items-center justify-center"
+        style={{ left: layout.meLeft, perspective: '1100px' }}
       >
         <div
           ref={tiltRef}
@@ -774,10 +849,12 @@ export default function TechLampScene() {
                         <span className="-mb-[3px] h-1.5 w-1.5 rounded-full" style={{ background: tint }} />
                       </span>
                     )}
-                    <Logo style={{ color: color ?? '#f1f5f9', fontSize: cardW * 0.42 }} aria-hidden="true" />
-                    <span className="px-1 text-center font-sans text-[10px] font-semibold leading-tight text-white/80">
-                      {skill}
-                    </span>
+                    <Logo style={{ color: color ?? '#f1f5f9', fontSize: cardW * (showNames ? 0.42 : 0.52) }} aria-hidden="true" />
+                    {showNames && (
+                      <span className="px-1 text-center font-sans text-[10px] font-semibold leading-tight text-white/80">
+                        {skill}
+                      </span>
+                    )}
                   </div>
                 </div>
               )

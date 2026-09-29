@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Icon from './Icon'
 import { FEATURED_PROJECTS } from '../data/projects'
+import { thumb } from '../utils/images'
 
 // Fanned card deck: the active project sits square in front, the other two
 // angle out behind it. Click a back card to bring it forward. Below md the
@@ -53,7 +54,8 @@ export default function ProjectShowcaseDeck({ onNavigate }) {
             <div className="mb-3.5 flex items-center gap-3.5">
               <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-bg-alt shadow-md transition-all duration-300 group-hover:scale-105 group-hover:border-text-mid">
                 <img
-                  src={project.image}
+                  src={thumb(project.image)}
+                  loading="lazy"
                   alt=""
                   className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
                 />

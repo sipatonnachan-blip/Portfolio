@@ -1,5 +1,6 @@
 import Icon from '../components/Icon'
 import { FEATURED_PROJECTS, ALL_PROJECTS } from '../data/projects'
+import { full, thumb } from '../utils/images'
 
 function SectionHeading({ children, count }) {
   return (
@@ -28,15 +29,17 @@ function FeaturedCard({ project, lead, delay, onOpenImage }) {
     >
       <button
         type="button"
-        onClick={() => onOpenImage(project.image, project.title)}
+        onClick={() => onOpenImage(full(project.image), project.title)}
         aria-label={`Preview ${project.title}`}
         className={`relative w-full flex-shrink-0 overflow-hidden border-b border-border bg-bg-alt ${
           lead ? 'h-[220px] sm:h-[300px] lg:h-auto lg:flex-1' : 'h-[170px]'
         }`}
       >
         <img
-          src={project.image}
+          src={lead ? full(project.image) : thumb(project.image)}
           alt={project.title}
+          loading={lead ? 'eager' : 'lazy'}
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
         />
         <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 font-mono text-[10px] font-bold text-white">
@@ -82,7 +85,7 @@ function FeaturedCard({ project, lead, delay, onOpenImage }) {
           )}
           <button
             type="button"
-            onClick={() => onOpenImage(project.image, project.title)}
+            onClick={() => onOpenImage(full(project.image), project.title)}
             className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-sans text-xs font-semibold text-text transition-colors hover:border-text-light hover:bg-bg-alt"
           >
             <Icon name="expand-outline" className="text-sm" />
@@ -133,15 +136,16 @@ export default function Projects({ onOpenImage }) {
             <button
               key={project.title}
               type="button"
-              onClick={() => onOpenImage(project.image, project.title)}
+              onClick={() => onOpenImage(full(project.image), project.title)}
               className="group overflow-hidden rounded-2xl border border-border bg-bg-card text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-text-light hover:shadow-md motion-safe:animate-rise"
               style={{ animationDelay: `${380 + idx * 40}ms` }}
             >
               <div className="relative h-[130px] w-full overflow-hidden border-b border-border bg-bg-alt">
                 <img
-                  src={project.image}
+                  src={thumb(project.image)}
                   alt={project.title}
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/40">
