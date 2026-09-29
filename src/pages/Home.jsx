@@ -63,10 +63,10 @@ export default function Home({ onNavigate }) {
             Hi, I&apos;m {PROFILE.name}.
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-mid sm:text-[15px]">
-            A full-stack web developer crafting robust backend architectures with{' '}
-            <span className="font-semibold text-text">Laravel</span> &amp;{' '}
-            <span className="font-semibold text-text">Node.js</span>, and fluid, responsive frontends with{' '}
-            <span className="font-semibold text-text">React</span> &amp;{' '}
+            I build web apps from start to finish. Solid backends with{' '}
+            <span className="font-semibold text-text">Laravel</span> and{' '}
+            <span className="font-semibold text-text">Node.js</span>, clean frontends with{' '}
+            <span className="font-semibold text-text">React</span> and{' '}
             <span className="font-semibold text-text">Tailwind CSS</span>.
           </p>
         </div>
