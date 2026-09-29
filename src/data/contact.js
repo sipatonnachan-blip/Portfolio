@@ -11,7 +11,7 @@ export const PROFILE = {
   phoneDisplay: '+63 948 613 1385',
 }
 
-export const GITHUB_URL = 'https://github.com/sipatonnachan-blip'
+export const GITHUB_URL = 'https://github.com/Xtian-Xtian/Xtian-Xtian'
 export const FACEBOOK_URL = 'https://facebook.com/ChanDe02'
 
 // Only real, working profiles belong here — a bare https://linkedin.com link
@@ -34,7 +34,7 @@ export const CONTACT_OPTIONS = [
   {
     icon: 'logo-github',
     label: 'GitHub',
-    value: 'sipatonnachan-blip',
+    value: 'Xtian-Xtian',
     href: GITHUB_URL,
     external: true,
   },

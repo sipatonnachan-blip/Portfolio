@@ -13,82 +13,88 @@ export default function Contact() {
   }
 
   return (
-    <div className="w-full space-y-12 py-4 sm:py-8">
+    <div className="w-full space-y-8 py-4 sm:py-6">
       {/* Header */}
-      <div className="max-w-2xl">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-alt px-3 py-1 font-mono text-xs text-text-light">
-          <span>📬</span>
-          <span>Reach Out</span>
-        </div>
-        <h1 className="mt-3 font-sans text-3xl font-extrabold tracking-tight text-text sm:text-4xl">
+      <div className="max-w-2xl motion-safe:animate-rise">
+        <h1 className="font-sans text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
           Get in Touch
         </h1>
-        <p className="mt-3 text-base leading-relaxed text-text-mid">
+        <p className="mt-3 text-sm leading-relaxed text-text-mid sm:text-base">
           Fastest by email. Everything else below works too.
         </p>
       </div>
 
-      <LocationMap />
-
-      {/* Copy Email Quick Box */}
-      <div className="flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-bg-card p-6 sm:flex-row sm:items-center sm:p-8">
-        <div>
-          <span className="font-mono text-xs font-semibold text-text-light uppercase tracking-wider">
-            Primary Email Channel
-          </span>
-          <p className="mt-1 font-mono text-base font-bold text-text sm:text-lg">
-            {PROFILE.email}
-          </p>
+      {/* Map on the left, ways to reach me on the right */}
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+        <div className="motion-safe:animate-rise" style={{ animationDelay: '100ms' }}>
+          <LocationMap />
         </div>
 
-        <button
-          onClick={handleCopyEmail}
-          className="inline-flex items-center gap-2 rounded-xl bg-text px-4 py-2.5 font-mono text-xs font-semibold text-secondary transition-all hover:opacity-90 active:scale-95"
-        >
-          <Icon name={copied ? 'checkmark-outline' : 'copy-outline'} className="text-sm" />
-          <span>{copied ? 'Copied to Clipboard!' : 'Copy Email'}</span>
-        </button>
-      </div>
-
-      {/* Direct Channels Grid */}
-      <section className="space-y-6">
-        <div className="flex items-center gap-3">
-          <span className="h-2 w-2 rounded-full bg-text" />
-          <h2 className="font-sans text-xl font-bold text-text sm:text-2xl">
-            Direct Communication Channels
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {CONTACT_OPTIONS.map((option) => (
-            <a
-              key={option.label}
-              href={option.href}
-              target={option.external ? '_blank' : undefined}
-              rel={option.external ? 'noopener noreferrer' : undefined}
-              className="group flex items-center justify-between rounded-2xl border border-border bg-bg-card p-5 text-left transition-all duration-200 hover:-translate-y-1 hover:border-text-mid/70 hover:shadow-xl"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-border bg-bg-alt text-lg text-text transition-colors group-hover:border-text-mid group-hover:bg-text group-hover:text-secondary">
-                  <Icon name={option.icon} />
-                </div>
-                <div>
-                  <h3 className="font-mono text-[11px] font-bold text-text-light uppercase tracking-wider">
-                    {option.label}
-                  </h3>
-                  <p className="font-mono text-sm font-semibold text-text group-hover:text-primary transition-colors truncate max-w-[220px]">
-                    {option.value}
-                  </p>
-                </div>
-              </div>
-
-              <span className="font-mono text-xs text-text-light/50 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-text">
-                ↗
+        <div className="space-y-4">
+          {/* Primary email */}
+          <section
+            className="rounded-2xl border border-border bg-bg-card p-5 shadow-sm motion-safe:animate-rise sm:p-6"
+            style={{ animationDelay: '180ms' }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand text-white shadow-sm">
+                <Icon name="mail-outline" className="text-base" />
               </span>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-brand">
+                Primary Email Channel
+              </span>
+            </div>
+            <a
+              href={`mailto:${PROFILE.email}`}
+              className="mt-4 block break-all font-mono text-base font-bold text-text transition-colors hover:text-brand sm:text-lg"
+            >
+              {PROFILE.email}
             </a>
-          ))}
+            <button
+              onClick={handleCopyEmail}
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 font-sans text-xs font-semibold text-bg-card shadow-md transition-all hover:opacity-90 active:scale-95"
+            >
+              <Icon name={copied ? 'checkmark-outline' : 'copy-outline'} className="text-sm" />
+              <span>{copied ? 'Copied to Clipboard!' : 'Copy Email'}</span>
+            </button>
+          </section>
+
+          {/* Direct channels */}
+          <section
+            className="rounded-2xl border border-border bg-bg-card p-2 shadow-sm motion-safe:animate-rise"
+            style={{ animationDelay: '260ms' }}
+          >
+            <h2 className="px-3 pb-1 pt-3 font-mono text-[11px] font-semibold uppercase tracking-wider text-text-light">
+              Direct Communication Channels
+            </h2>
+            <ul className="divide-y divide-border">
+              {CONTACT_OPTIONS.map((option) => (
+                <li key={option.label}>
+                  <a
+                    href={option.href}
+                    target={option.external ? '_blank' : undefined}
+                    rel={option.external ? 'noopener noreferrer' : undefined}
+                    className="group flex items-center gap-3.5 rounded-xl px-3 py-3 transition-colors hover:bg-bg-alt"
+                  >
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                      <Icon name={option.icon} className="text-base" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-mono text-[10px] font-semibold uppercase tracking-wider text-text-light">
+                        {option.label}
+                      </span>
+                      <span className="block truncate text-sm font-semibold text-text">{option.value}</span>
+                    </span>
+                    <span className="text-xs text-text-light transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-text">
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
   )
 }

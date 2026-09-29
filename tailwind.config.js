@@ -8,6 +8,12 @@ export default {
         primary: 'var(--primary)',
         secondary: 'var(--secondary)',
         accent: 'var(--accent)',
+        ink: 'var(--ink)',
+        glow: 'var(--glow)',
+        brand: {
+          DEFAULT: 'var(--brand)',
+          soft: 'var(--brand-soft)',
+        },
         text: {
           DEFAULT: 'var(--text)',
           mid: 'var(--text-mid)',
@@ -76,6 +82,16 @@ export default {
           '50%, 95%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        // Uses the individual `translate` property (not `transform`) so the
+        // filled end state never overrides hover:-translate-* utilities.
+        rise: {
+          '0%': { opacity: '0', translate: '0 14px' },
+          '100%': { opacity: '1', translate: '0 0' },
+        },
+        'slide-in-left': {
+          '0%': { opacity: '0', translate: '-24px 0' },
+          '100%': { opacity: '1', translate: '0 0' },
+        },
         'menu-open': {
           '0%': { opacity: '0', transform: 'translateY(-6px)', maxHeight: '0' },
           '100%': { opacity: '1', transform: 'translateY(0)', maxHeight: '600px' },
@@ -86,6 +102,8 @@ export default {
         'fade-in-up': 'fade-in-up 0.45s ease-out both',
         'fade-in': 'fade-in 0.3s ease-out both',
         'menu-open': 'menu-open 0.3s ease-out both',
+        rise: 'rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'slide-in-left': 'slide-in-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
         caret: 'caret 1s steps(1, end) infinite',
         'dot-cycle': 'dot-cycle 1.2s ease-in-out infinite',
         'dot-spin': 'dot-spin 0.9s linear infinite',

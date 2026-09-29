@@ -36,7 +36,14 @@ import {
   IoConstructOutline,
   IoCloudOutline,
   IoFileTrayFullOutline,
+  IoCheckmarkCircle,
+  IoEyeOutline,
+  IoRibbonOutline,
+  IoGlobeOutline,
+  IoRocketOutline,
+  IoChatbubbleEllipsesOutline,
 } from 'react-icons/io5'
+import { RiRobot2Fill } from 'react-icons/ri'
 
 // Bundled (build-time) icon set — mirrors the Ionicons v5 names used
 // throughout the app, so no runtime/CDN script is needed to render icons.
@@ -78,6 +85,13 @@ const ICONS = {
   'construct-outline': IoConstructOutline,
   'cloud-outline': IoCloudOutline,
   'file-tray-full-outline': IoFileTrayFullOutline,
+  'checkmark-circle': IoCheckmarkCircle,
+  'eye-outline': IoEyeOutline,
+  'ribbon-outline': IoRibbonOutline,
+  'globe-outline': IoGlobeOutline,
+  'rocket-outline': IoRocketOutline,
+  'chatbubble-ellipses-outline': IoChatbubbleEllipsesOutline,
+  robot: RiRobot2Fill,
 }
 
 export default function Icon({ name, className }) {

@@ -1,208 +1,304 @@
 import { Mascot } from 'page-mascot'
-import { PROFILE, SOCIALS } from '../data/contact'
-import { TECH_STACK_CATEGORIES } from '../data/techStack'
+import { PROFILE, GITHUB_URL } from '../data/contact'
+import { TECH_LOGOS, LOGO_SKILLS } from '../data/techLogos'
+import { FEATURED_PROJECTS, ALL_PROJECTS, GITHUB_REPOS } from '../data/projects'
+import { ABOUT_PARAGRAPHS, SERVICES } from '../data/about'
+import { EXPERIENCE, EDUCATION } from '../data/experience'
 import Icon from '../components/Icon'
-import ProjectShowcaseDeck from '../components/ProjectShowcaseDeck'
 
-export default function Home({ onNavigate, onOpenSecurityDemo }) {
+const TOOLS = LOGO_SKILLS
+
+const half = Math.ceil(GITHUB_REPOS.length / 2)
+const BUILD_ROWS = [GITHUB_REPOS.slice(0, half), GITHUB_REPOS.slice(half)]
+
+// `aside` sits in its own column beside the header (sm+), so wide cards never
+// overlap their description; `children` flow below the header.
+function BentoCard({ icon, title, description, onClick, className = '', delay = 0, aside, footer, children }) {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick()
+    }
+  }
+
   return (
-    <div className="space-y-20 py-4 sm:py-8">
-      {/* ── 1. Hero Section with Interactive Mascot Pedestal ── */}
-      <section className="relative flex flex-col-reverse items-center justify-between gap-10 lg:flex-row lg:items-center">
-        {/* Left: Bio & Actions */}
-        <div className="flex-1 text-center lg:text-left">
-          {/* Availability Status Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-medium text-emerald-500">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            <span>Available for Full-Stack Roles &amp; Projects</span>
-          </div>
+    <article
+      role="link"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      style={{ animationDelay: `${delay}ms` }}
+      aria-label={`${title} — ${description}`}
+      className={`group relative flex min-w-0 cursor-pointer motion-safe:animate-rise overflow-hidden rounded-2xl border border-border bg-bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-text-light hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand ${className}`}
+    >
+      <div className={`flex min-w-0 flex-1 gap-4 ${aside ? 'flex-col sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]' : 'flex-col'}`}>
+        <div className={`flex min-w-0 flex-col ${aside ? '' : 'flex-1'}`}>
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-brand text-white shadow-sm">
+          <Icon name={icon} className="text-sm" />
+        </span>
+        <h3 className="font-sans text-[15px] font-semibold tracking-tight text-text">{title}</h3>
+        <span className="ml-auto text-xs text-text-light opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100">
+          ↗
+        </span>
+      </div>
+      <p className="mt-2 text-[11px] leading-relaxed text-text-light">{description}</p>
+          {children}
+          {footer && <div className="mt-auto hidden pt-4 sm:block">{footer}</div>}
+        </div>
+        {aside && <div className="flex min-w-0 flex-col">{aside}</div>}
+      </div>
+    </article>
+  )
+}
 
-          <h1 className="mt-5 font-sans text-3xl font-extrabold tracking-tight text-text sm:text-4xl lg:text-5xl">
-            Hi, I'm{' '}
-            <span className="bg-gradient-to-r from-text via-text-mid to-text-light bg-clip-text text-transparent">
-              {PROFILE.name}
-            </span>
-            .
+export default function Home({ onNavigate }) {
+  return (
+    <div className="flex min-h-[calc(100vh-3rem)] flex-col gap-5 lg:min-h-[calc(100vh-4rem)]">
+      {/* ── 1. Headline ── */}
+      <header className="motion-safe:animate-rise flex flex-col-reverse items-start justify-between gap-4 sm:flex-row">
+        <div className="min-w-0">
+          <h1 className="font-sans text-4xl font-extrabold tracking-tight text-ink sm:text-5xl xl:text-6xl">
+            Hi, I&apos;m {PROFILE.name}.
           </h1>
-
-          <p className="mt-4 text-base leading-relaxed text-text-mid sm:text-lg">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-mid sm:text-[15px]">
             A full-stack web developer crafting robust backend architectures with{' '}
             <span className="font-semibold text-text">Laravel</span> &amp;{' '}
             <span className="font-semibold text-text">Node.js</span>, and fluid, responsive frontends with{' '}
             <span className="font-semibold text-text">React</span> &amp;{' '}
             <span className="font-semibold text-text">Tailwind CSS</span>.
           </p>
-
-          {/* Action Row with Clean & Visible Red Slashing Hover Animation */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5 lg:justify-start">
-            <button
-              onClick={() => onNavigate('projects')}
-              className="btn-katana-primary group inline-flex items-center gap-2.5 rounded-xl px-6 py-3.5 font-mono text-xs font-bold active:scale-[0.98]"
-            >
-              <span className="relative z-10 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-                Explore Selected Work
-              </span>
-              <span className="relative z-10 text-white transition-transform duration-300 group-hover:translate-y-1">
-                ↓
-              </span>
-            </button>
-
-            <button
-              onClick={() => onNavigate('contact')}
-              className="btn-katana-secondary group inline-flex items-center gap-2 rounded-xl border border-border bg-bg-card px-6 py-3.5 font-mono text-xs font-semibold text-text active:scale-[0.98]"
-            >
-              <span className="relative z-10 font-bold transition-colors duration-200">
-                Get in Touch
-              </span>
-              <span className="relative z-10 font-bold transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1">
-                ↗
-              </span>
-            </button>
-
-            <div className="mx-1 hidden h-6 w-px bg-border sm:block" />
-
-            {/* Quick Socials */}
-            <div className="flex items-center gap-1.5">
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={s.name}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-bg-card text-text transition-all duration-200 hover:scale-110 hover:border-text-mid hover:text-primary"
-                >
-                  <Icon name={s.icon} className="text-base" />
-                </a>
-              ))}
-            </div>
-          </div>          
         </div>
 
-        {/* Right: Interactive Real Photo Mascot Pedestal */}
-        <div className="flex flex-shrink-0 flex-col items-center">
-          <div className="group relative flex h-[280px] w-[260px] items-center justify-center rounded-3xl border border-border bg-gradient-to-b from-bg-card to-bg-alt/70 p-4 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-text-mid/60 hover:shadow-2xl sm:h-[320px] sm:w-[290px]">
-            {/* Ambient Background Glow */}
-            <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-emerald-500/10 via-transparent to-indigo-500/10 opacity-50 blur-xl transition-opacity duration-300 group-hover:opacity-80" />
+        <button
+          onClick={() => onNavigate('contact')}
+          className="inline-flex flex-shrink-0 items-center gap-2 self-end rounded-full bg-ink px-4 py-2 font-sans text-xs font-semibold text-bg-card shadow-md transition-all duration-200 hover:scale-[1.03] hover:opacity-90 active:scale-[0.98] sm:self-start"
+        >
+          <span>Get in touch</span>
+          <span>↗</span>
+        </button>
+      </header>
 
-            <div className="relative z-10 flex flex-col items-center">
-              <Mascot
-                directions="/mascots/christian-directions.webp"
-                reactions="/mascots/christian-reactions.webp"
-                size={230}
-                label={PROFILE.name}
-              />
-            </div>
-          </div>
-
-          {/* Interactive micro-badge */}
-        </div>
-      </section>
-
-      {/* ── 3. Featured Work Deck ── */}
-      <section className="space-y-6">
-        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
-          <div>
-            <div className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold tracking-wider text-text-light uppercase">
-              <span className="h-1.5 w-1.5 rounded-full bg-text" />
-              <span>Featured Systems</span>
-            </div>
-            <h2 className="mt-1 font-sans text-2xl font-bold tracking-tight text-text sm:text-3xl">
-              Production Work &amp; Case Studies
-            </h2>
-          </div>
-          <button
-            onClick={() => onNavigate('projects')}
-            className="group flex items-center gap-1 font-mono text-xs font-semibold text-text transition-colors hover:underline"
-          >
-            <span>View All Projects</span>
-            <span className="transition-transform group-hover:translate-x-1">→</span>
-          </button>
-        </div>
-
-        <ProjectShowcaseDeck onNavigate={onNavigate} />
-      </section>
-
-      {/* ── 4. Tech Stack Sneak Peek ── */}
-      <section className="rounded-3xl border border-border bg-bg-card p-6 sm:p-8">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <span className="font-mono text-xs font-semibold tracking-wider text-text-light uppercase">
-              Core Technologies
-            </span>
-            <h2 className="mt-1 font-sans text-2xl font-bold tracking-tight text-text">
-              Tools &amp; Frameworks I Build With
-            </h2>
-          </div>
+      {/* ── 2. Tools strip ── */}
+      <section className="rounded-2xl bg-gradient-to-r from-bg-card to-glow p-1.5 shadow-sm motion-safe:animate-rise" style={{ animationDelay: '100ms' }}>
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-bg-card p-3 sm:flex-row sm:items-center">
           <button
             onClick={() => onNavigate('tech stack')}
-            className="group flex items-center gap-1 font-mono text-xs font-semibold text-text transition-colors hover:underline"
+            className="flex-shrink-0 px-2 text-left sm:border-r sm:border-border sm:pr-5"
           >
-            <span>Explore Full Stack</span>
-            <span className="transition-transform group-hover:translate-x-1">→</span>
+            <span className="block font-mono text-[10px] font-semibold uppercase tracking-wider text-brand">
+              Core Technologies
+            </span>
+            <span className="block text-sm font-semibold text-text">Tools I work with</span>
           </button>
-        </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {TECH_STACK_CATEGORIES.map((cat) => (
-            <div
-              key={cat.category}
-              className="rounded-2xl border border-border/80 bg-bg-alt/50 p-4"
-            >
-              <h4 className="font-mono text-[11px] font-bold tracking-wider text-text-light uppercase">
-                {cat.category}
-              </h4>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {cat.skills.slice(0, 4).map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-md border border-border bg-bg-card px-2 py-0.5 font-mono text-[11px] text-text"
+          <div className="marquee marquee-mask min-w-0 flex-1 overflow-hidden rounded-xl border border-border py-2.5">
+            <ul className="marquee-track">
+              {[...TOOLS, ...TOOLS].map((tool, idx) => {
+                const [Logo, color] = TECH_LOGOS[tool]
+                return (
+                  <li
+                    key={`${tool}-${idx}`}
+                    aria-hidden={idx >= TOOLS.length}
+                    className="flex flex-shrink-0 items-center gap-2 px-5 text-xs font-medium text-text"
                   >
-                    {skill}
-                  </span>
-                ))}
-                {cat.skills.length > 4 && (
-                  <span className="rounded-md border border-border/60 bg-bg-card/50 px-1.5 py-0.5 font-mono text-[10px] text-text-light">
-                    +{cat.skills.length - 4}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
+                    <Logo className="text-base" style={color ? { color } : undefined} aria-hidden="true" />
+                    <span>{tool}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* ── 5. Direct Connect Banner ── */}
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-bg-card via-bg-alt/60 to-bg-card p-8 sm:p-12 text-center">
-        <div className="mx-auto max-w-xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-alt px-3 py-1 font-mono text-[11px] text-text-mid">
-            <span>🤝</span>
-            <span>Let's collaborate</span>
-          </span>
-          <h2 className="mt-4 font-sans text-2xl font-bold tracking-tight text-text sm:text-3xl">
-            Interested in building together?
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-text-mid">
-            I'm always open to discussing new web development opportunities, full-stack projects, and software solutions.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href={`mailto:${PROFILE.email}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-text px-5 py-3 font-mono text-xs font-semibold text-secondary shadow-md transition-all hover:opacity-90"
-            >
-              <span>{PROFILE.email}</span>
-              <span>↗</span>
-            </a>
-            <button
-              onClick={() => onNavigate('contact')}
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-bg-card px-5 py-3 font-mono text-xs font-semibold text-text transition-colors hover:border-text-mid"
-            >
-              <span>View All Contact Channels</span>
-            </button>
-          </div>
+      {/* ── 3. Bento grid ── */}
+      <section style={{ animationDelay: '180ms' }} className="motion-safe:animate-rise flex flex-1 rounded-[28px] bg-gradient-to-br from-bg-card via-bg-card to-glow p-2.5 shadow-md sm:p-3.5">
+        <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
+          {/* Projects */}
+          <BentoCard
+            delay={260}
+            icon="folder-outline"
+            title="Projects"
+            description="Production apps I've designed, built and deployed end to end."
+            onClick={() => onNavigate('projects')}
+            className="min-h-[260px] sm:col-span-2"
+            footer={
+              <span className="text-[11px] font-medium text-text-light transition-colors group-hover:text-text">
+                {FEATURED_PROJECTS.length} featured · {ALL_PROJECTS.length} more →
+              </span>
+            }
+            aside={
+              <div className="grid flex-1 grid-rows-2 gap-2">
+                {FEATURED_PROJECTS.slice(0, 2).map((project) => (
+                  <div
+                    key={project.title}
+                    className="relative min-h-[100px] overflow-hidden rounded-xl border border-border bg-bg-alt shadow-sm"
+                  >
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute bottom-2 left-2 rounded-md bg-black/70 px-2 py-0.5 font-mono text-[10px] font-semibold text-white">
+                      {project.title}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            }
+          />
+
+          {/* About */}
+          <BentoCard
+            delay={340}
+            icon="person-outline"
+            title="About"
+            description={ABOUT_PARAGRAPHS[0]}
+            onClick={() => onNavigate('about')}
+            className="min-h-[260px] [&_p]:line-clamp-2"
+          >
+            <div className="flex flex-1 items-center justify-center pt-4">
+              <div className="relative h-36 w-32">
+                <img
+                  src={PROFILE.avatarNight}
+                  alt=""
+                  className="absolute inset-0 h-full w-full -translate-x-5 -rotate-[14deg] rounded-xl border-4 border-bg-card object-cover shadow-md"
+                />
+                <img
+                  src={PROFILE.avatarHover}
+                  alt=""
+                  className="absolute inset-0 h-full w-full -translate-x-2.5 -rotate-[7deg] rounded-xl border-4 border-bg-card object-cover shadow-md"
+                />
+                {/* Poking the mascot should not navigate away */}
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-xl border-4 border-bg-card bg-bg-alt shadow-lg transition-transform duration-300 group-hover:rotate-2"
+                >
+                  <Mascot
+                    directions="/mascots/christian-directions.webp"
+                    reactions="/mascots/christian-reactions.webp"
+                    size={120}
+                    label={PROFILE.name}
+                  />
+                </div>
+              </div>
+            </div>
+          </BentoCard>
+
+          {/* More builds */}
+          <BentoCard
+            delay={420}
+            icon="rocket-outline"
+            title="More Builds"
+            description={`${GITHUB_REPOS.length} public repos on GitHub — finance, scheduling, evaluation tools and more.`}
+            onClick={() => window.open(GITHUB_URL, '_blank', 'noopener,noreferrer')}
+            className="min-h-[260px]"
+          >
+            <div className="-mx-4 flex flex-1 flex-col justify-center gap-2 pt-4">
+              {BUILD_ROWS.map((row, rowIdx) => (
+                <div key={rowIdx} className="marquee marquee-mask overflow-hidden">
+                  <ul className={`marquee-track ${rowIdx === 1 ? 'reverse' : ''}`}>
+                    {[...row, ...row].map((repo, idx) => {
+                      const isCopy = idx >= row.length
+                      return (
+                        <li key={`${repo.repo}-${idx}`} aria-hidden={isCopy} className="mx-1 flex-shrink-0">
+                          <a
+                            href={repo.homepage ?? `https://github.com/Xtian-Xtian/${repo.repo}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            tabIndex={isCopy ? -1 : undefined}
+                            title={repo.homepage ? `${repo.title} — live site` : `${repo.title} on GitHub`}
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => e.stopPropagation()}
+                            className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-bg-card px-2.5 py-1 text-[10px] font-medium text-text shadow-sm transition-colors hover:border-text-light"
+                          >
+                            <Icon name={repo.homepage ? 'globe-outline' : 'logo-github'} className="text-[11px] text-brand" />
+                            <span>{repo.title}</span>
+                            {repo.language && <span className="text-text-light">· {repo.language}</span>}
+                          </a>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </BentoCard>
+
+          {/* Education */}
+          <BentoCard
+            delay={500}
+            icon="school-outline"
+            title="Education"
+            description={`${EDUCATION.company} · ${EDUCATION.date}`}
+            onClick={() => onNavigate('experience')}
+            className="min-h-[260px]"
+          >
+            <div className="flex flex-1 flex-col items-center justify-center gap-3 pt-4">
+              <div className="flex h-24 w-24 items-center justify-center rounded-full border-[6px] border-bg-alt bg-bg-card shadow-lg ring-1 ring-border">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-bg-alt">
+                  <Icon name="ribbon-outline" className="text-3xl text-text-mid" />
+                </div>
+              </div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-1 text-[10px] font-semibold text-bg-card shadow-md">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+                {EDUCATION.title}
+              </span>
+            </div>
+          </BentoCard>
+
+          {/* Services */}
+          <BentoCard
+            delay={580}
+            icon="layers-outline"
+            title="Services"
+            description="What I offer, from schema to production server."
+            onClick={() => onNavigate('about')}
+            className="min-h-[260px]"
+          >
+            <ul className="mt-3 divide-y divide-border">
+              {SERVICES.map((service, idx) => (
+                <li key={service.title} className="flex items-center gap-2.5 py-2">
+                  <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md bg-brand-soft text-brand">
+                    <Icon name={service.icon} className="text-[11px]" />
+                  </span>
+                  <span className="truncate text-[11px] font-medium text-text">{service.title}</span>
+                  <span className="ml-auto font-mono text-[10px] text-text-light">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </BentoCard>
+
+          {/* Experience */}
+          <BentoCard
+            delay={660}
+            icon="briefcase-outline"
+            title="Experience"
+            description="Where I've built, deployed and supported real systems."
+            onClick={() => onNavigate('experience')}
+            className="min-h-[260px] sm:col-span-2"
+            aside={
+              <ul className="flex flex-1 flex-col justify-between gap-2">
+                {EXPERIENCE.map((job) => (
+                  <li
+                    key={`${job.company}-${job.title}`}
+                    className="rounded-xl border border-border bg-bg-card px-3 py-2 shadow-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icon name="business-outline" className="flex-shrink-0 text-xs text-brand" />
+                      <span className="truncate text-[11px] font-semibold text-text">{job.company}</span>
+                    </div>
+                    <p className="mt-0.5 truncate text-[10px] text-text-light">{job.title}</p>
+                    <p className="mt-0.5 text-[10px] font-medium text-brand">{job.date}</p>
+                  </li>
+                ))}
+              </ul>
+            }
+          />
         </div>
       </section>
     </div>

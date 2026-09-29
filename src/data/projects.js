@@ -41,3 +41,21 @@ export const ALL_PROJECTS = [
   { title: 'Weevil Repository', category: 'Data Hub', image: '/images/pro (6).png' },
   { title: 'Suast Dashboard', category: 'Management', image: '/images/pro (8).png' },
 ]
+
+// Public repos on github.com/Xtian-Xtian, most recently pushed first. The
+// profile README repo and the old portfolio are left out. `title` is the
+// display name; `repo` is the actual repository name.
+export const GITHUB_REPOS = [
+  { title: 'Finance', repo: '-Finance', language: 'TypeScript' },
+  { title: 'CashFlow', repo: 'CashFlow', language: 'Blade' },
+  { title: 'ROP', repo: 'ROP', language: null },
+  { title: 'ScheduLink', repo: 'schedulink', language: 'PHP' },
+  { title: 'Grad Message', repo: 'Grad-Message', language: 'HTML' },
+  { title: 'TeachEval Admin', repo: 'Teacheval-admin', language: 'JavaScript' },
+  { title: 'TeachEval', repo: 'Teacheval', language: 'JavaScript', homepage: 'https://teacheval.vercel.app' },
+  { title: 'Pweevils', repo: 'Pweevils', language: 'JavaScript' },
+  { title: 'Tourist', repo: 'Tourist', language: 'JavaScript' },
+  { title: 'Capstone', repo: 'Capstone', language: 'JavaScript' },
+  { title: 'API Activity', repo: 'API-activity', language: null },
+  { title: 'Login', repo: 'Login', language: null },
+]

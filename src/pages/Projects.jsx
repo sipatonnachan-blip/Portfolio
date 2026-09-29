@@ -1,127 +1,148 @@
 import Icon from '../components/Icon'
 import { FEATURED_PROJECTS, ALL_PROJECTS } from '../data/projects'
 
+function SectionHeading({ children, count }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="h-2 w-2 rounded-full bg-brand" />
+      <h2 className="font-sans text-lg font-bold tracking-tight text-text sm:text-xl">{children}</h2>
+      {count !== undefined && (
+        <span className="rounded-full bg-brand-soft px-2 py-0.5 font-mono text-[10px] font-semibold text-brand">
+          {count}
+        </span>
+      )}
+    </div>
+  )
+}
+
+// The first featured project is the large lead card; the rest stack beside it.
+function FeaturedCard({ project, lead, delay, onOpenImage }) {
+  const tags = project.tech.split('•').map((t) => t.trim())
+
+  return (
+    <article
+      className={`group flex flex-col overflow-hidden rounded-2xl border border-border bg-bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-text-light hover:shadow-md motion-safe:animate-rise ${
+        lead ? 'md:col-span-2 lg:col-span-1 lg:row-span-2' : ''
+      }`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <button
+        type="button"
+        onClick={() => onOpenImage(project.image, project.title)}
+        aria-label={`Preview ${project.title}`}
+        className={`relative w-full flex-shrink-0 overflow-hidden border-b border-border bg-bg-alt ${
+          lead ? 'h-[220px] sm:h-[300px] lg:h-auto lg:flex-1' : 'h-[170px]'
+        }`}
+      >
+        <img
+          src={project.image}
+          alt={project.title}
+          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+        />
+        <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 font-mono text-[10px] font-bold text-white">
+          {project.badge}
+        </span>
+        <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-lg bg-black/60 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <Icon name="expand-outline" />
+        </span>
+      </button>
+
+      <div className="flex flex-col p-5">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className={`font-sans font-bold text-text ${lead ? 'text-xl' : 'text-base'}`}>{project.title}</h3>
+          <span className="flex flex-shrink-0 items-center gap-1.5 font-mono text-[10px] font-semibold text-emerald-500">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            PRODUCTION
+          </span>
+        </div>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-text-mid">{project.description}</p>
+
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-md border border-border bg-bg-alt px-2 py-0.5 font-mono text-[10px] font-medium text-text-mid"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
+          {project.link && project.link !== '#' && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-ink px-3.5 py-1.5 font-sans text-xs font-semibold text-bg-card shadow-sm transition-opacity hover:opacity-90"
+            >
+              <Icon name="globe-outline" className="text-sm" />
+              <span>Live Demo</span>
+            </a>
+          )}
+          <button
+            type="button"
+            onClick={() => onOpenImage(project.image, project.title)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border px-3.5 py-1.5 font-sans text-xs font-semibold text-text transition-colors hover:border-text-light hover:bg-bg-alt"
+          >
+            <Icon name="expand-outline" className="text-sm" />
+            <span>Preview</span>
+          </button>
+        </div>
+      </div>
+    </article>
+  )
+}
+
 export default function Projects({ onOpenImage }) {
   return (
-    <div className="w-full space-y-16 py-4 sm:py-8">
+    <div className="w-full space-y-10 py-4 sm:py-6">
       {/* Header */}
-      <div className="max-w-2xl">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-alt px-3 py-1 font-mono text-xs text-text-light">
-          <span>📂</span>
-          <span>Portfolio Showcase</span>
-        </div>
-        <h1 className="mt-3 font-sans text-3xl font-extrabold tracking-tight text-text sm:text-4xl">
+      <div className="max-w-2xl motion-safe:animate-rise">
+        <h1 className="font-sans text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
           Projects &amp; Web Applications
         </h1>
-        <p className="mt-3 text-base leading-relaxed text-text-mid">
-          A showcase of production web applications, system dashboards, geospatial platforms, and client case studies I've designed and built.
+        <p className="mt-3 text-sm leading-relaxed text-text-mid sm:text-base">
+          A showcase of production web applications, system dashboards, geospatial platforms, and client case studies I&apos;ve designed and built.
         </p>
       </div>
 
-      {/* Featured Projects */}
-      <section className="space-y-6">
-        <div className="flex items-center gap-3">
-          <span className="h-2 w-2 rounded-full bg-text" />
-          <h2 className="font-sans text-xl font-bold text-text sm:text-2xl">
-            Featured Applications
-          </h2>
-        </div>
+      {/* Featured: one lead card with the others stacked beside it */}
+      <section className="space-y-4">
+        <SectionHeading count={FEATURED_PROJECTS.length}>Featured Applications</SectionHeading>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {FEATURED_PROJECTS.map((project) => (
-            <div
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+          {FEATURED_PROJECTS.map((project, idx) => (
+            <FeaturedCard
               key={project.title}
-              className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-bg-card transition-all duration-300 hover:-translate-y-1.5 hover:border-text-mid hover:shadow-xl"
-            >
-              <div>
-                {/* Image Preview with Hover Zoom */}
-                <div
-                  onClick={() => onOpenImage(project.image, project.title)}
-                  className="relative h-[190px] w-full cursor-pointer overflow-hidden border-b border-border bg-bg-alt"
-                >
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-bg-card/90 via-transparent to-transparent opacity-60" />
-                  <div className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-lg border border-white/20 bg-black/50 text-xs text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
-                    <Icon name="expand-outline" />
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="p-5 sm:p-6">
-                  <div className="mb-3 flex items-center justify-between font-mono text-[10px] text-text-light">
-                    <span className="rounded-md border border-border bg-bg-alt px-2 py-0.5 font-medium">
-                      {project.tech.split('•')[0].trim()}
-                    </span>
-                    <span className="font-medium text-emerald-500">PRODUCTION</span>
-                  </div>
-
-                  <h3 className="mb-2 font-sans text-lg font-bold text-text transition-colors group-hover:text-primary">
-                    {project.title}
-                  </h3>
-
-                  <p className="mb-4 text-xs leading-relaxed text-text-mid">
-                    {project.description}
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Action Links */}
-              <div className="flex items-center justify-between border-t border-border/60 px-5 py-3.5 font-mono text-xs sm:px-6">
-                <span className="max-w-[140px] truncate text-[11px] text-text-light">
-                  {project.tech}
-                </span>
-
-                {project.link && project.link !== '#' ? (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-semibold text-text hover:underline"
-                  >
-                    <span>Live Demo</span>
-                    <span>↗</span>
-                  </a>
-                ) : (
-                  <button
-                    onClick={() => onOpenImage(project.image, project.title)}
-                    className="inline-flex items-center gap-1 text-text-light hover:text-text font-medium"
-                  >
-                    <span>Preview</span>
-                    <span>↗</span>
-                  </button>
-                )}
-              </div>
-            </div>
+              project={project}
+              lead={idx === 0}
+              delay={100 + idx * 90}
+              onOpenImage={onOpenImage}
+            />
           ))}
         </div>
       </section>
 
-      {/* All Projects & Case Studies */}
-      <section className="space-y-6">
-        <div className="flex items-center gap-3">
-          <span className="h-2 w-2 rounded-full bg-text" />
-          <h2 className="font-sans text-xl font-bold text-text sm:text-2xl">
-            All Projects &amp; Case Studies
-          </h2>
-        </div>
+      {/* Gallery */}
+      <section className="space-y-4">
+        <SectionHeading count={ALL_PROJECTS.length}>All Projects &amp; Case Studies</SectionHeading>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-          {ALL_PROJECTS.map((project) => (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+          {ALL_PROJECTS.map((project, idx) => (
             <button
               key={project.title}
               type="button"
               onClick={() => onOpenImage(project.image, project.title)}
-              className="group cursor-pointer overflow-hidden rounded-2xl border border-border bg-bg-card text-left transition-all duration-200 hover:-translate-y-1 hover:border-text-mid/70 hover:shadow-lg"
+              className="group overflow-hidden rounded-2xl border border-border bg-bg-card text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-text-light hover:shadow-md motion-safe:animate-rise"
+              style={{ animationDelay: `${380 + idx * 40}ms` }}
             >
-              <div className="relative h-[120px] w-full overflow-hidden border-b border-border bg-bg-alt">
+              <div className="relative h-[130px] w-full overflow-hidden border-b border-border bg-bg-alt">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/40">
                   <Icon
@@ -131,13 +152,11 @@ export default function Projects({ onOpenImage }) {
                 </div>
               </div>
 
-              <div className="p-3.5">
-                <h4 className="truncate font-sans text-xs font-bold text-text transition-colors group-hover:text-primary">
-                  {project.title}
-                </h4>
-                <p className="mt-0.5 font-mono text-[10px] text-text-light">
+              <div className="flex items-center justify-between gap-2 p-3.5">
+                <h3 className="truncate font-sans text-xs font-bold text-text">{project.title}</h3>
+                <span className="flex-shrink-0 rounded-full bg-brand-soft px-2 py-0.5 font-mono text-[9px] font-semibold text-brand">
                   {project.category}
-                </p>
+                </span>
               </div>
             </button>
           ))}

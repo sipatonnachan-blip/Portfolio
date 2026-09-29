@@ -1,7 +1,7 @@
-// Kept to a single lede — the role, location, stack and shipping record all
+// Kept to a single lede — the role, location, stack and delivery record all
 // appear again in Quick Facts and the service cards below.
 export const ABOUT_PARAGRAPHS = [
-  "Full-stack developer in Davao City. I build and ship production web applications end to end — clean, maintainable code that solves real business problems.",
+  "Full-stack developer and AI engineer in Davao City. I design, build and deploy production web applications end to end — clean, maintainable code that solves real business problems.",
 ]
 
 export const SERVICES = [
@@ -21,7 +21,7 @@ export const SERVICES = [
     icon: 'git-network-outline',
     title: 'Production Quality',
     description:
-      'Reviewed commits, tested changes, and real deployment experience. Code that ships confidently.',
+      'Reviewed commits, tested changes, and real deployment experience. Code you can deploy with confidence.',
   },
   {
     icon: 'cloud-done-outline',
