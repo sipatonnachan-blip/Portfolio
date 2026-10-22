@@ -42,6 +42,12 @@ import {
   IoGlobeOutline,
   IoRocketOutline,
   IoChatbubbleEllipsesOutline,
+  IoCameraOutline,
+  IoCameraReverseOutline,
+  IoDownloadOutline,
+  IoRefreshOutline,
+  IoApertureOutline,
+  IoImageOutline,
 } from 'react-icons/io5'
 import { RiRobot2Fill } from 'react-icons/ri'
 
@@ -91,6 +97,12 @@ const ICONS = {
   'globe-outline': IoGlobeOutline,
   'rocket-outline': IoRocketOutline,
   'chatbubble-ellipses-outline': IoChatbubbleEllipsesOutline,
+  'camera-outline': IoCameraOutline,
+  'camera-reverse-outline': IoCameraReverseOutline,
+  'download-outline': IoDownloadOutline,
+  'refresh-outline': IoRefreshOutline,
+  'aperture-outline': IoApertureOutline,
+  'image-outline': IoImageOutline,
   robot: RiRobot2Fill,
 }
 

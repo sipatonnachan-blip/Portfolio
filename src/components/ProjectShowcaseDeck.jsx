@@ -53,12 +53,18 @@ export default function ProjectShowcaseDeck({ onNavigate }) {
             {/* Thumbnail + title */}
             <div className="mb-3.5 flex items-center gap-3.5">
               <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-xl border border-border bg-bg-alt shadow-md transition-all duration-300 group-hover:scale-105 group-hover:border-text-mid">
-                <img
-                  src={thumb(project.image)}
-                  loading="lazy"
-                  alt=""
-                  className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
-                />
+                {project.image ? (
+                  <img
+                    src={thumb(project.image)}
+                    loading="lazy"
+                    alt=""
+                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="pb-gradient h-full w-full flex items-center justify-center">
+                    <div className="h-5 w-5 rounded-full bg-gradient-to-br from-orange-400 to-rose-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]" />
+                  </div>
+                )}
               </div>
               <h3 className="font-mono text-base font-semibold tracking-tight text-text transition-colors group-hover:text-primary">
                 {project.title}

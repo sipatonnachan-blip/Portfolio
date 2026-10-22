@@ -136,13 +136,25 @@ export default function Home({ onNavigate }) {
                     key={project.title}
                     className="relative min-h-[100px] overflow-hidden rounded-xl border border-border bg-bg-alt shadow-sm"
                   >
-                    <img
-                      src={thumb(project.image)}
-                      alt={project.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
+                    {project.image ? (
+                      <img
+                        src={thumb(project.image)}
+                        alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 overflow-hidden">
+                        <div className="pb-gradient absolute inset-0" />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                          <div className="flex h-11 w-14 items-center justify-center rounded-xl border border-white/30 bg-white/10 shadow-md backdrop-blur-sm">
+                            <div className="h-7 w-7 rounded-full bg-gradient-to-br from-orange-400 via-rose-500 to-purple-600 shadow-[0_0_14px_rgba(249,115,22,0.5)]" />
+                          </div>
+                          <span className="font-mono text-[8px] font-bold uppercase tracking-widest text-white/60">Live App</span>
+                        </div>
+                      </div>
+                    )}
                     <span className="absolute bottom-2 left-2 rounded-md bg-black/70 px-2 py-0.5 font-mono text-[10px] font-semibold text-white">
                       {project.title}
                     </span>

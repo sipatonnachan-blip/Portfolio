@@ -2,6 +2,15 @@
 // headline pill on the deck card; tag chips are derived from `tech`.
 export const FEATURED_PROJECTS = [
   {
+    title: 'Photo Booth',
+    badge: 'INTERACTIVE APP',
+    description: 'A live photo booth — capture, filter and frame photos right in the browser',
+    tech: 'React • Canvas API • getUserMedia • CSS Filters',
+    image: null,
+    link: null,
+    interactive: true,
+  },
+  {
     title: 'Monthly Tracker',
     badge: '#1 FINANCE APP',
     description: 'Expense tracking app for personal finances',

@@ -641,3 +641,123 @@ html.theme-transitioning article {
     animation: none;
   }
 }
+
+/* ── Photo Booth card hero ── */
+.pb-gradient {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+  background-size: 300% 300%;
+  animation: pb-gradient-shift 8s ease-in-out infinite;
+}
+@keyframes pb-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  25% { background-position: 100% 0%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+}
+
+.pb-float-slow {
+  animation: pb-float 6s ease-in-out infinite;
+}
+.pb-float-medium {
+  animation: pb-float 4.5s ease-in-out 1s infinite;
+}
+@keyframes pb-float {
+  0%, 100% { transform: translateY(0) rotate(var(--pb-rotate, 12deg)); }
+  50% { transform: translateY(-12px) rotate(var(--pb-rotate, 12deg)); }
+}
+.pb-float-slow { --pb-rotate: 12deg; }
+.pb-float-medium { --pb-rotate: -6deg; }
+
+.pb-sparkle {
+  animation: pb-sparkle 3s ease-in-out infinite;
+}
+.pb-sparkle-delay {
+  animation: pb-sparkle 3s ease-in-out 1s infinite;
+}
+.pb-sparkle-slow {
+  animation: pb-sparkle 4s ease-in-out 0.5s infinite;
+}
+@keyframes pb-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+}
+
+.pb-flash-blink {
+  animation: pb-flash-blink 3s ease-in-out infinite;
+}
+@keyframes pb-flash-blink {
+  0%, 90%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(249, 115, 22, 0.3); }
+  95% { opacity: 1; box-shadow: 0 0 12px rgba(249, 115, 22, 0.9); }
+}
+
+@keyframes pb-ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.2), 0 0 20px rgba(249, 115, 22, 0.05); }
+  50% { box-shadow: 0 0 0 16px rgba(249, 115, 22, 0), 0 0 40px rgba(249, 115, 22, 0.1); }
+}
+
+.pb-badge {
+  animation: pb-badge-glow 2.5s ease-in-out infinite;
+}
+@keyframes pb-badge-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+  50% { box-shadow: 0 0 20px 2px rgba(249, 115, 22, 0.15); }
+}
+
+.pb-camera {
+  animation: pb-camera-idle 4s ease-in-out infinite;
+}
+@keyframes pb-camera-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Hover: stop idle float and pop */
+.group:hover .pb-camera {
+  animation: none;
+  transform: scale(1.1);
+}
+
+/* ── Photo Booth overlay ── */
+.pb-countdown-number {
+  animation: pb-countdown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes pb-countdown {
+  0% { opacity: 0; scale: 2.5; }
+  30% { opacity: 1; scale: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; scale: 0.8; }
+}
+
+.pb-flash {
+  animation: pb-flash 0.3s ease-out both;
+}
+@keyframes pb-flash {
+  0% { opacity: 0; }
+  15% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+.pb-capture-ring {
+  animation: pb-capture-ring 2s ease-in-out infinite;
+}
+@keyframes pb-capture-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-countdown-number,
+  .pb-flash,
+  .pb-capture-ring,
+  .pb-gradient,
+  .pb-float-slow,
+  .pb-float-medium,
+  .pb-sparkle,
+  .pb-sparkle-delay,
+  .pb-sparkle-slow,
+  .pb-flash-blink,
+  .pb-badge,
+  .pb-camera {
+    animation: none;
+  }
+}

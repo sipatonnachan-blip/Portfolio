@@ -107,26 +107,34 @@ export default function Sidebar({ activePage, onNavigate, theme, onToggleTheme, 
 
   const navList = (
     <nav className="space-y-1">
-      {NAV_ITEMS.map((item) => {
+      {NAV_ITEMS.map((item, index) => {
         const isActive = activePage === item.id
         return (
           <button
             key={item.id}
             onClick={() => handleNav(item.id)}
             aria-current={isActive ? 'page' : undefined}
-            className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[13px] transition-colors ${
+            style={{ animationDelay: `${index * 60}ms` }}
+            className={`group motion-safe:animate-nav-item-in flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[13px] transition-all duration-200 ${
               isActive
-                ? 'bg-bg-alt font-semibold text-text shadow-sm'
-                : 'font-medium text-text-mid hover:bg-bg-alt hover:text-text'
+                ? 'bg-bg-alt font-semibold text-text shadow-sm translate-x-1'
+                : 'font-medium text-text-mid hover:bg-bg-alt hover:text-text hover:translate-x-1'
             }`}
           >
             <Icon
               name={item.icon}
-              className={`text-[15px] transition-colors ${
-                isActive ? 'text-brand' : 'text-text-light group-hover:text-text'
+              className={`text-[15px] transition-all duration-200 ${
+                isActive
+                  ? 'text-brand scale-110'
+                  : 'text-text-light group-hover:text-brand group-hover:scale-110'
               }`}
             />
-            <span>{item.label}</span>
+            <span className="transition-all duration-200">{item.label}</span>
+            <span
+              className={`ml-auto h-1.5 w-1.5 rounded-full bg-brand transition-all duration-200 ${
+                isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-40'
+              }`}
+            />
           </button>
         )
       })}
