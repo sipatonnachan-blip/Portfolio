@@ -589,6 +589,8 @@ export default function PhotoBooth({ open, onClose }) {
   const [wantedPhotoRect, setWantedPhotoRect] = useState(WANTED_PHOTO_DEFAULT)
   const [wantedNamePos, setWantedNamePos] = useState(WANTED_NAME_DEFAULT)
   const [wantedBountyPos, setWantedBountyPos] = useState(WANTED_BOUNTY_DEFAULT)
+  const [customBg, setCustomBg] = useState(null) // user-uploaded background image (dataURL)
+  const customBgInputRef = useRef(null)
 
   const videoRef = useRef(null)
   const captureCanvasRef = useRef(null)
@@ -755,8 +757,17 @@ export default function PhotoBooth({ open, onClose }) {
     const tpl = currentTemplate
     canvas.width = tpl.width; canvas.height = tpl.height
     const ctx = canvas.getContext('2d')
-    // decorate() may return a Promise (e.g. image-backed templates)
-    await Promise.resolve(tpl.decorate(ctx, tpl.width, tpl.height))
+    // If user uploaded a custom background, use it instead of the template's background
+    if (customBg && tpl.id !== 'wanted' && tpl.id !== 'custom') {
+      await new Promise((resolve) => {
+        const bg = new Image()
+        bg.onload = () => { ctx.drawImage(bg, 0, 0, tpl.width, tpl.height); resolve() }
+        bg.onerror = () => { tpl.decorate(ctx, tpl.width, tpl.height); resolve() }
+        bg.src = customBg
+      })
+    } else {
+      await Promise.resolve(tpl.decorate(ctx, tpl.width, tpl.height))
+    }
     const photoSlots = tpl.slots()
     const draws = photoSlots.map((slot, i) => {
       if (!capturedPhotos[i]) return Promise.resolve()
@@ -782,12 +793,12 @@ export default function PhotoBooth({ open, onClose }) {
     await Promise.all(draws)
     if (tpl.id === 'wanted') drawWantedText(ctx, wantedName, wantedBounty, wantedNamePos, wantedBountyPos)
     drawSignature(ctx, tpl.width, tpl.height)
-  }, [capturedPhotos, currentTemplate, wantedName, wantedBounty, wantedPhotoRect, wantedNamePos, wantedBountyPos])
+  }, [capturedPhotos, currentTemplate, customBg, wantedName, wantedBounty, wantedPhotoRect, wantedNamePos, wantedBountyPos])
 
   useEffect(() => {
     // Wanted uses the interactive preview — composite happens at download time
     if (stage === 'review' && allCaptured && !isCustom && currentTemplate.id !== 'wanted') compositeResult()
-  }, [stage, allCaptured, compositeResult, isCustom, currentTemplate])
+  }, [stage, allCaptured, compositeResult, isCustom, currentTemplate, customBg])
 
   const handleDownload = useCallback(async () => {
     const canvas = compositeCanvasRef.current
@@ -853,6 +864,7 @@ export default function PhotoBooth({ open, onClose }) {
 
   const handleTemplateChange = useCallback((id) => {
     setActiveTemplate(id); setCapturedPhotos([]); setCustomItems([])
+    if (id === 'wanted' || id === 'custom') setCustomBg(null)
     if (stage === 'review' || stage === 'custom-edit') setStage('idle')
   }, [stage])
 
@@ -864,7 +876,7 @@ export default function PhotoBooth({ open, onClose }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       role="dialog" aria-modal="true" aria-label="Photo Booth"
     >
-      <div className="flex h-[100dvh] w-full max-w-6xl flex-col overflow-hidden bg-bg-card lg:h-[92dvh] lg:max-h-[800px] lg:rounded-2xl lg:border lg:border-border lg:shadow-[0_25px_80px_-12px_rgba(0,0,0,0.6)]">
+      <div className="flex h-[100dvh] w-full max-w-6xl flex-col overflow-hidden bg-bg-card sm:max-w-2xl lg:h-[92dvh] lg:max-h-[800px] lg:max-w-6xl lg:rounded-2xl lg:border lg:border-border lg:shadow-[0_25px_80px_-12px_rgba(0,0,0,0.6)]">
 
         {/* Header */}
         <header className="flex flex-shrink-0 items-center justify-between border-b border-border bg-gradient-to-r from-bg-card to-bg-alt px-5 py-3">
@@ -877,7 +889,7 @@ export default function PhotoBooth({ open, onClose }) {
               {stage === 'idle' && isCustom && customItems.length > 0 && (
                 <p className="font-mono text-[10px] text-text-mid">{customItems.length} photo{customItems.length !== 1 ? 's' : ''} captured</p>
               )}
-              {stage === 'idle' && !isCustom && photosNeeded > 1 && (
+              {(stage === 'idle' || stage === 'countdown' || stage === 'flash') && !isCustom && photosNeeded > 1 && (
                 <p className="font-mono text-[10px] text-text-mid">Photo {capturedPhotos.length + 1} of {photosNeeded}</p>
               )}
               {stage === 'custom-edit' && (
@@ -914,8 +926,8 @@ export default function PhotoBooth({ open, onClose }) {
         {/* Body */}
         <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
 
-          {/* Viewfinder / Editor */}
-          <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-black/95">
+          {/* Viewfinder / Editor — fixed height on mobile so sidebar never crushes it */}
+          <div className="relative flex h-[52dvh] flex-shrink-0 items-center justify-center overflow-hidden bg-black/95 sm:h-[56dvh] lg:h-auto lg:flex-1 lg:flex-shrink">
             {stage === 'error' ? (
               <div className="flex flex-col items-center gap-5 px-8 text-center">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
@@ -960,7 +972,13 @@ export default function PhotoBooth({ open, onClose }) {
               </>
             ) : (
               <>
-                <div className="h-full w-full overflow-hidden flex items-center justify-center">
+                <div className="h-full w-full overflow-hidden flex items-center justify-center" style={{ position: 'relative' }}>
+                  {/* Custom bg hint strip at top of viewfinder */}
+                  {customBg && (
+                    <div className="absolute inset-0 z-0 pointer-events-none">
+                      <img src={customBg} alt="" className="h-full w-full object-cover opacity-20" />
+                    </div>
+                  )}
                   <video
                     ref={(el) => {
                       videoRef.current = el
@@ -969,6 +987,7 @@ export default function PhotoBooth({ open, onClose }) {
                     autoPlay playsInline muted
                     className="h-full w-full object-contain"
                     style={{
+                      position: 'relative', zIndex: 1,
                       filter: currentFilter.css,
                       transform: `${facingMode === 'user' && !isVirtualCam ? 'scaleX(-1) ' : ''}scale(${zoom})`,
                       transition: 'transform 0.1s ease-out',
@@ -979,7 +998,7 @@ export default function PhotoBooth({ open, onClose }) {
 
                 {/* Preset thumbnail strip */}
                 {!isCustom && photosNeeded > 1 && capturedPhotos.length > 0 && (
-                  <div className="absolute bottom-4 left-4 flex gap-2">
+                  <div className="absolute bottom-4 left-4 z-[2] flex gap-2">
                     {capturedPhotos.map((src, i) => (
                       <img key={i} src={src} alt={`Photo ${i + 1}`}
                         className="h-14 w-14 rounded-lg border-2 border-white/90 object-cover shadow-lg" />
@@ -995,7 +1014,7 @@ export default function PhotoBooth({ open, onClose }) {
 
                 {/* Custom thumbnail strip */}
                 {isCustom && customItems.length > 0 && (
-                  <div className="absolute bottom-4 left-4 flex gap-2 max-w-[calc(100%-2rem)] overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+                  <div className="absolute bottom-4 left-4 z-[2] flex gap-2 max-w-[calc(100%-2rem)] overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
                     {customItems.map((item, i) => (
                       <img key={item.id} src={item.src} alt={`Photo ${i + 1}`}
                         className="h-12 w-12 flex-shrink-0 rounded-lg border-2 border-white/70 object-cover shadow-lg" />
@@ -1006,30 +1025,30 @@ export default function PhotoBooth({ open, onClose }) {
             )}
 
             {stage === 'countdown' && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+              <div className="absolute inset-0 z-[3] flex items-center justify-center bg-black/40 backdrop-blur-sm">
                 <span key={countdown} className="pb-countdown-number font-sans text-9xl font-black text-white drop-shadow-[0_4px_24px_rgba(249,115,22,0.5)]">
                   {countdown}
                 </span>
               </div>
             )}
-            {stage === 'flash' && <div className="pb-flash absolute inset-0 bg-white" />}
+            {stage === 'flash' && <div className="pb-flash absolute inset-0 z-[3] bg-white" />}
           </div>
 
-          {/* Sidebar */}
-          <div className="flex w-full flex-shrink-0 flex-col border-t border-border bg-bg-card lg:w-72 lg:border-l lg:border-t-0">
-            <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-4 lg:p-5" style={{ scrollbarWidth: 'thin' }}>
+          {/* Sidebar — scrollable on mobile, fixed-width panel on desktop */}
+          <div className="flex min-h-0 flex-1 flex-col border-t border-border bg-bg-card lg:w-72 lg:flex-none lg:border-l lg:border-t-0">
+            <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-3 lg:gap-5 lg:p-5" style={{ scrollbarWidth: 'thin' }}>
 
               {/* Filters */}
               {stage !== 'custom-edit' && (
                 <div>
-                  <h3 className="mb-2.5 flex items-center gap-2 font-sans text-[11px] font-bold uppercase tracking-wider text-text-mid">
+                  <h3 className="mb-2 flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-wider text-text-mid lg:mb-2.5 lg:text-[11px]">
                     <Icon name="color-palette-outline" className="text-xs text-brand" />
                     Filters
                   </h3>
                   <div className="flex gap-1.5 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible" style={{ scrollbarWidth: 'none' }}>
                     {FILTERS.map((f) => (
                       <button key={f.id} onClick={() => setActiveFilter(f.id)}
-                        className={`flex-shrink-0 rounded-lg border px-3 py-1.5 font-mono text-[10px] font-semibold transition-all ${
+                        className={`flex-shrink-0 rounded-lg border px-2.5 py-1 font-mono text-[10px] font-semibold transition-all lg:px-3 lg:py-1.5 ${
                           activeFilter === f.id
                             ? 'border-brand bg-brand/10 text-brand shadow-sm shadow-brand/10'
                             : 'border-border bg-bg-alt text-text-mid hover:border-text-light hover:text-text'
@@ -1044,7 +1063,7 @@ export default function PhotoBooth({ open, onClose }) {
               {/* Zoom */}
               {showCamera && (
                 <div>
-                  <h3 className="mb-2.5 flex items-center gap-2 font-sans text-[11px] font-bold uppercase tracking-wider text-text-mid">
+                  <h3 className="mb-2 flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-wider text-text-mid lg:mb-2.5 lg:text-[11px]">
                     <Icon name="search-outline" className="text-xs text-brand" />
                     Zoom · {zoom.toFixed(1)}×
                   </h3>
@@ -1077,14 +1096,14 @@ export default function PhotoBooth({ open, onClose }) {
               {/* Layout picker */}
               {stage !== 'custom-edit' && stage !== 'review' && (
                 <div>
-                  <h3 className="mb-2.5 flex items-center gap-2 font-sans text-[11px] font-bold uppercase tracking-wider text-text-mid">
+                  <h3 className="mb-2 flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-wider text-text-mid lg:mb-2.5 lg:text-[11px]">
                     <Icon name="image-outline" className="text-xs text-brand" />
                     Layout
                   </h3>
-                  <div className="grid grid-cols-4 gap-1.5 lg:grid-cols-3">
+                  <div className="grid grid-cols-5 gap-1 sm:grid-cols-4 lg:grid-cols-3 lg:gap-1.5">
                     {TEMPLATES.map((t) => (
                       <button key={t.id} onClick={() => handleTemplateChange(t.id)}
-                        className={`group/tpl flex flex-col items-center gap-1 rounded-lg border p-2 transition-all ${
+                        className={`group/tpl flex flex-col items-center gap-0.5 rounded-lg border p-1.5 transition-all lg:gap-1 lg:p-2 ${
                           activeTemplate === t.id
                             ? 'border-brand bg-brand/10 shadow-sm shadow-brand/10'
                             : 'border-border bg-bg-alt hover:border-text-light'
@@ -1092,23 +1111,23 @@ export default function PhotoBooth({ open, onClose }) {
                         aria-pressed={activeTemplate === t.id}
                       >
                         {t.id === 'custom' ? (
-                          <div className={`flex h-9 w-9 items-center justify-center ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}>
-                            <Icon name="grid-outline" className="text-xl" />
+                          <div className={`flex h-7 w-7 items-center justify-center lg:h-9 lg:w-9 ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}>
+                            <Icon name="grid-outline" className="text-base lg:text-xl" />
                           </div>
                         ) : t.id === 'wanted' ? (
-                          <div className={`flex h-9 w-9 items-center justify-center rounded text-[9px] font-black leading-none ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}
+                          <div className={`flex h-7 w-7 items-center justify-center rounded text-[8px] font-black leading-none lg:h-9 lg:w-9 lg:text-[9px] ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}
                             style={{ fontFamily: 'Georgia,serif', letterSpacing: '-0.5px' }}>
                             WNT
                           </div>
                         ) : t.id === 'newspaper' ? (
-                          <div className={`flex h-9 w-9 items-center justify-center rounded text-[9px] font-black leading-none ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}
+                          <div className={`flex h-7 w-7 items-center justify-center rounded text-[8px] font-black leading-none lg:h-9 lg:w-9 lg:text-[9px] ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}
                             style={{ fontFamily: 'Georgia,serif', letterSpacing: '-0.5px' }}>
                             NWS
                           </div>
                         ) : (
                           <TemplateIcon template={t} active={activeTemplate === t.id} />
                         )}
-                        <span className={`font-mono text-[8px] font-bold ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}>
+                        <span className={`font-mono text-[7px] font-bold lg:text-[8px] ${activeTemplate === t.id ? 'text-brand' : 'text-text-light'}`}>
                           {t.label}
                         </span>
                       </button>
@@ -1122,10 +1141,57 @@ export default function PhotoBooth({ open, onClose }) {
                 </div>
               )}
 
+              {/* Custom background upload */}
+              {stage !== 'custom-edit' && activeTemplate !== 'wanted' && activeTemplate !== 'custom' && (
+                <div>
+                  <h3 className="mb-2 flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-wider text-text-mid lg:mb-2.5 lg:text-[11px]">
+                    <Icon name="image-outline" className="text-xs text-brand" />
+                    Background
+                  </h3>
+                  <input
+                    ref={customBgInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      const reader = new FileReader()
+                      reader.onload = (ev) => setCustomBg(ev.target.result)
+                      reader.readAsDataURL(file)
+                      e.target.value = ''
+                    }}
+                  />
+                  {customBg ? (
+                    <div className="relative overflow-hidden rounded-lg border border-border">
+                      <img src={customBg} alt="Custom background" className="h-20 w-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+                        <button
+                          onClick={() => customBgInputRef.current?.click()}
+                          className="rounded-lg bg-white/20 px-2 py-1 font-mono text-[9px] font-bold text-white backdrop-blur-sm hover:bg-white/30"
+                        >Change</button>
+                        <button
+                          onClick={() => setCustomBg(null)}
+                          className="rounded-lg bg-red-500/70 px-2 py-1 font-mono text-[9px] font-bold text-white backdrop-blur-sm hover:bg-red-500"
+                        >Remove</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => customBgInputRef.current?.click()}
+                      className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border py-3 font-mono text-[10px] font-semibold text-text-light transition-all hover:border-brand hover:text-brand"
+                    >
+                      <Icon name="cloud-upload-outline" className="text-sm" />
+                      Upload image
+                    </button>
+                  )}
+                </div>
+              )}
+
               {/* Wanted poster inputs */}
               {activeTemplate === 'wanted' && stage !== 'custom-edit' && (
                 <div>
-                  <h3 className="mb-2.5 flex items-center gap-2 font-sans text-[11px] font-bold uppercase tracking-wider text-text-mid">
+                  <h3 className="mb-2 flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-wider text-text-mid lg:mb-2.5 lg:text-[11px]">
                     <Icon name="person-outline" className="text-xs text-brand" />
                     Poster Details
                   </h3>
@@ -1187,7 +1253,7 @@ export default function PhotoBooth({ open, onClose }) {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col gap-2 border-t border-border p-4 lg:p-5">
+            <div className="flex flex-col gap-2 border-t border-border p-3 lg:p-5">
 
               {stage === 'idle' && !isCustom && !allCaptured && (
                 <button onClick={startCountdown}
