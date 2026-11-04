@@ -1,7 +1,7 @@
-// Kept to a single lede — the role, location, stack and delivery record all
-// appear again in Quick Facts and the service cards below.
 export const ABOUT_PARAGRAPHS = [
-  "Full-stack developer and AI engineer in Davao City. I design, build and deploy production web applications end to end — clean, maintainable code that solves real business problems.",
+  "I'm a full-stack developer in Davao City who builds production systems people actually use. At DSG Son's Group, I've shipped two live applications — owning the full stack from authenticated login to Nginx server configuration — and I keep those systems running.",
+  "My four years supporting IT at Davao Oriental State University taught me to diagnose problems fast and not hand them off. That habit carries into every codebase I work in.",
+  "I work in Laravel, React, MySQL, and Tailwind. I use AI as a precision coding tool — writing targeted prompts, reviewing outputs critically, and integrating results into tested, production-grade code.",
 ]
 
 export const SERVICES = [

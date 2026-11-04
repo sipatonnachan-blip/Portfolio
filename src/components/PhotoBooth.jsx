@@ -1059,8 +1059,7 @@ export default function PhotoBooth({ open, onClose }) {
                   </div>
                 </div>
               )}
-
-              {/* Zoom */}
+              {/* camera Zoom */}
               {showCamera && (
                 <div>
                   <h3 className="mb-2 flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-wider text-text-mid lg:mb-2.5 lg:text-[11px]">

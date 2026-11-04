@@ -11,9 +11,17 @@ export const FEATURED_PROJECTS = [
     interactive: true,
   },
   {
+    title: 'Neon Strike',
+    badge: 'C++ DESKTOP GAME',
+    description: 'A single-file Win32 + GDI+ 2D side-scrolling shooter — procedural stickman animation, three weapons, four enemy types, parallax neon skyline, and wave-based progression. Compiles from one .cpp with no external assets.',
+    tech: 'C++ • Win32 • GDI+ • MinGW / MSVC',
+    image: '/images/neon-strike.svg',
+    link: '/game/neon-strike/NeonStrike.exe',
+  },
+  {
     title: 'Monthly Tracker',
     badge: '#1 FINANCE APP',
-    description: 'Expense tracking app for personal finances',
+    description: 'Multi-user expense tracker with authenticated accounts, categorised transaction history, and monthly budget summaries — Laravel backend, MySQL, deployed live on Render.',
     tech: 'Laravel • MySQL • Tailwind • Render',
     image: '/images/case 1.png',
     link: 'https://monthly-tracker-mdjt.onrender.com/',
@@ -21,7 +29,7 @@ export const FEATURED_PROJECTS = [
   {
     title: 'ScheduLink',
     badge: '#1 SCHEDULING SUITE',
-    description: 'Advanced scheduling and event management system',
+    description: 'Scheduling suite with conflict-detection logic and role-separated views for organizers and attendees — Laravel and React frontend served via production Nginx.',
     tech: 'Laravel • React • MySQL • Nginx',
     image: '/images/dashboard-schedulink.png',
     link: null,
@@ -29,7 +37,7 @@ export const FEATURED_PROJECTS = [
   {
     title: 'Weevil Suite',
     badge: '#1 GEOSPATIAL HUB',
-    description: 'Multi-page geospatial data platform with mapping',
+    description: 'Geospatial research platform for weevil taxonomy — interactive mapping, specimen repository, and taxonomic key across five interconnected modules on a single Nginx server.',
     tech: 'Laravel • JavaScript • MySQL • Nginx',
     image: '/images/pro (1).png',
     link: null,
@@ -37,10 +45,6 @@ export const FEATURED_PROJECTS = [
 ]
 
 export const ALL_PROJECTS = [
-  { title: 'Case Study 2', category: 'Web development', image: '/images/case 2.png' },
-  { title: 'Case Study 3', category: 'Web development', image: '/images/case 3.png' },
-  { title: 'Case Study 4', category: 'Web development', image: '/images/case 4.png' },
-  { title: 'Case Study 5', category: 'Web development', image: '/images/case 5.png' },
   { title: 'ROP Dashboard', category: 'Admin Panel', image: '/images/dashboard-rop.png' },
   { title: 'Batch Request', category: 'System', image: '/images/batch request.png' },
   { title: 'Weevil Dashboard', category: 'Analytics', image: '/images/pro (2).png' },

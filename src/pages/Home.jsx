@@ -53,31 +53,41 @@ function BentoCard({ icon, title, description, onClick, className = '', delay = 
   )
 }
 
-export default function Home({ onNavigate }) {
+export default function Home({ onNavigate, onOpenResume }) {
   return (
     <div className="flex min-h-[calc(100vh-3rem)] flex-col gap-5 lg:min-h-[calc(100vh-4rem)]">
       {/* ── 1. Headline ── */}
       <header className="motion-safe:animate-rise flex flex-col-reverse items-start justify-between gap-4 sm:flex-row">
         <div className="min-w-0">
           <h1 className="font-sans text-4xl font-extrabold tracking-tight text-ink sm:text-5xl xl:text-6xl">
-            Hi, I&apos;m {PROFILE.name}.
+            Full-Stack Developer.<br className="hidden sm:block" /> Ships end to end.
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-text-mid sm:text-[15px]">
-            I build web apps from start to finish. Solid backends with{' '}
-            <span className="font-semibold text-text">Laravel</span> and{' '}
-            <span className="font-semibold text-text">Node.js</span>, clean frontends with{' '}
+            Two production applications deployed — from database schema to live{' '}
+            <span className="font-semibold text-text">Nginx</span> server.{' '}
+            Backends in <span className="font-semibold text-text">Laravel</span>, frontends in{' '}
             <span className="font-semibold text-text">React</span> and{' '}
-            <span className="font-semibold text-text">Tailwind CSS</span>.
+            <span className="font-semibold text-text">Tailwind CSS</span>, data in{' '}
+            <span className="font-semibold text-text">MySQL</span>.
           </p>
         </div>
 
-        <button
-          onClick={() => onNavigate('contact')}
-          className="inline-flex flex-shrink-0 items-center gap-2 self-end rounded-full bg-ink px-4 py-2 font-sans text-xs font-semibold text-bg-card shadow-md transition-all duration-200 hover:scale-[1.03] hover:opacity-90 active:scale-[0.98] sm:self-start"
-        >
-          <span>Get in touch</span>
-          <span>↗</span>
-        </button>
+        <div className="flex flex-shrink-0 flex-col gap-2 self-end sm:flex-row sm:items-center sm:self-start">
+          <button
+            onClick={onOpenResume}
+            className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-ink px-4 py-2 font-sans text-xs font-semibold text-bg-card shadow-md transition-all duration-200 hover:scale-[1.03] hover:opacity-90 active:scale-[0.98]"
+          >
+            <Icon name="document-outline" className="text-sm" />
+            <span>Resume</span>
+          </button>
+          <button
+            onClick={() => onNavigate('contact')}
+            className="inline-flex flex-shrink-0 items-center gap-2 rounded-full border border-border bg-bg-card px-4 py-2 font-sans text-xs font-semibold text-text shadow-sm transition-all duration-200 hover:scale-[1.03] hover:border-text-mid active:scale-[0.98]"
+          >
+            <span>Get in touch</span>
+            <span>↗</span>
+          </button>
+        </div>
       </header>
 
       {/* ── 2. Tools strip ── */}

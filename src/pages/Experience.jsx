@@ -4,10 +4,10 @@ import Icon from '../components/Icon'
 // Summary strip above the roles. Static here rather than clickable as it was
 // on Home: one of these used to link to this very page.
 const METRICS = [
-  { value: '6+', label: 'Production Projects', icon: 'folder-outline' },
-  { value: '1+ Yrs', label: 'Experience', icon: 'time-outline' },
+  { value: '2', label: 'Apps Shipped to Production', icon: 'folder-outline' },
+  { value: '1+ Yr', label: 'Full-Stack Developer', icon: 'briefcase-outline' },
+  { value: '5 Yrs', label: 'In Technology (2021–)', icon: 'time-outline' },
   { value: '5+', label: 'Core Stacks', icon: 'code-slash-outline' },
-  { value: '99%', label: 'Reliability & Dedication', icon: 'shield-checkmark-outline' },
 ]
 
 function SectionHeading({ children }) {

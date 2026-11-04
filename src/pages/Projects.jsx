@@ -204,17 +204,19 @@ function FeaturedCard({ project, lead, delay, onOpenImage, onOpenPhotoBooth }) {
           </div>
 
           <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
-            {project.link && project.link !== '#' && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-ink px-3.5 py-1.5 font-sans text-xs font-semibold text-bg-card shadow-sm transition-opacity hover:opacity-90"
-              >
-                <Icon name="globe-outline" className="text-sm" />
-                <span>Live Demo</span>
-              </a>
-            )}
+            {project.link && project.link !== '#' && (() => {
+              const isDownload = /\.(exe|zip|dmg|msi|pkg|apk)$/i.test(project.link)
+              return (
+                <a
+                  href={project.link}
+                  {...(isDownload ? { download: '' } : { target: '_blank', rel: 'noopener noreferrer' })}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-ink px-3.5 py-1.5 font-sans text-xs font-semibold text-bg-card shadow-sm transition-opacity hover:opacity-90"
+                >
+                  <Icon name={isDownload ? 'download-outline' : 'globe-outline'} className="text-sm" />
+                  <span>{isDownload ? 'Download' : 'Live Demo'}</span>
+                </a>
+              )
+            })()}
             <button
               type="button"
               onClick={() => onOpenImage(full(project.image), project.title)}
@@ -239,7 +241,7 @@ export default function Projects({ onOpenImage, onOpenPhotoBooth }) {
           Projects &amp; Web Applications
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-text-mid sm:text-base">
-          A showcase of production web applications, system dashboards, geospatial platforms, and client case studies I&apos;ve designed and built.
+          Production web applications, system dashboards, and geospatial platforms — designed, built, and deployed.
         </p>
       </div>
 

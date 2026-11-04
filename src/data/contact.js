@@ -12,13 +12,11 @@ export const PROFILE = {
 }
 
 export const GITHUB_URL = 'https://github.com/Xtian-Xtian/Xtian-Xtian'
-export const FACEBOOK_URL = 'https://facebook.com/ChanDe02'
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/christiandelapos'
 
-// Only real, working profiles belong here — a bare https://linkedin.com link
-// went nowhere. Add LinkedIn back with the actual profile URL when there is one.
 export const SOCIALS = [
   { name: 'GitHub', icon: 'logo-github', url: GITHUB_URL },
-  { name: 'Facebook', icon: 'logo-facebook', url: FACEBOOK_URL },
+  { name: 'LinkedIn', icon: 'logo-linkedin', url: LINKEDIN_URL },
 ]
 
 // Email is not repeated here; the copy-to-clipboard panel above the grid on
@@ -32,17 +30,17 @@ export const CONTACT_OPTIONS = [
     external: false,
   },
   {
+    icon: 'logo-linkedin',
+    label: 'LinkedIn',
+    value: 'christiandelapos',
+    href: LINKEDIN_URL,
+    external: true,
+  },
+  {
     icon: 'logo-github',
     label: 'GitHub',
     value: 'Xtian-Xtian',
     href: GITHUB_URL,
-    external: true,
-  },
-  {
-    icon: 'logo-facebook',
-    label: 'Facebook',
-    value: 'ChanDe02',
-    href: FACEBOOK_URL,
     external: true,
   },
 ]

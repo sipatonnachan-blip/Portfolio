@@ -4,6 +4,7 @@ import FireflyCompanion from './components/FireflyCompanion'
 import ImageModal from './components/ImageModal'
 import SecurityDemoChat from './components/SecurityDemoChat'
 import PhotoBooth from './components/PhotoBooth'
+import ResumeModal from './components/ResumeModal'
 import { useTheme } from './hooks/useTheme'
 import { useAltHotkey } from './hooks/useHotkey'
 import Home from './pages/Home'
@@ -45,6 +46,7 @@ export default function App() {
   const [modalAlt, setModalAlt] = useState('')
   const [securityDemoOpen, setSecurityDemoOpen] = useState(false)
   const [photoBoothOpen, setPhotoBoothOpen] = useState(false)
+  const [resumeOpen, setResumeOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
 
   // Alt+K opens the security awareness demo.
@@ -115,6 +117,11 @@ export default function App() {
         onClose={() => setPhotoBoothOpen(false)}
       />
 
+      <ResumeModal
+        open={resumeOpen}
+        onClose={() => setResumeOpen(false)}
+      />
+
       {/* Site-wide firefly: perches on each page's heading, visits the lamp */}
       <FireflyCompanion
         activePage={activePage}
@@ -162,7 +169,7 @@ export default function App() {
             {shownPage === 'projects' ? (
               <ActivePageComponent onOpenImage={openImage} onOpenPhotoBooth={() => setPhotoBoothOpen(true)} />
             ) : shownPage === 'home' ? (
-              <ActivePageComponent onNavigate={handleNavigate} />
+              <ActivePageComponent onNavigate={handleNavigate} onOpenResume={() => setResumeOpen(true)} />
             ) : (
               <ActivePageComponent />
             )}

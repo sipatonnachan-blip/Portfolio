@@ -77,20 +77,22 @@ export default function ProjectShowcaseDeck({ onNavigate }) {
 
             {/* Only the front card is reachable; the others are decoration */}
             <div className="flex flex-wrap items-center gap-2 pt-1">
-              {project.link && (
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  tabIndex={isFront ? 0 : -1}
-                  aria-hidden={!isFront}
-                  onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-bg-alt px-3 py-1.5 font-mono text-xs font-medium text-text transition-all duration-200 hover:scale-[1.03] hover:border-text-mid active:scale-[0.98]"
-                >
-                  <Icon name="globe-outline" className="text-sm" />
-                  <span>Live Demo</span>
-                </a>
-              )}
+              {project.link && (() => {
+                const isDownload = /\.(exe|zip|dmg|msi|pkg|apk)$/i.test(project.link)
+                return (
+                  <a
+                    href={project.link}
+                    {...(isDownload ? { download: '' } : { target: '_blank', rel: 'noopener noreferrer' })}
+                    tabIndex={isFront ? 0 : -1}
+                    aria-hidden={!isFront}
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-bg-alt px-3 py-1.5 font-mono text-xs font-medium text-text transition-all duration-200 hover:scale-[1.03] hover:border-text-mid active:scale-[0.98]"
+                  >
+                    <Icon name={isDownload ? 'download-outline' : 'globe-outline'} className="text-sm" />
+                    <span>{isDownload ? 'Download' : 'Live Demo'}</span>
+                  </a>
+                )
+              })()}
               <button
                 type="button"
                 tabIndex={isFront ? 0 : -1}

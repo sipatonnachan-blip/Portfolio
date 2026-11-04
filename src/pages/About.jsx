@@ -6,9 +6,9 @@ import { PROFILE } from '../data/contact'
 // here just made the list longer without saying anything new.
 const FAST_FACTS = [
   { icon: 'briefcase-outline', label: 'Current Role', value: "Full-Stack Developer @ DSG Son's Group, Inc." },
-  { icon: 'sparkles-outline', label: 'Focus', value: 'Full-Stack Development · AI Engineering' },
+  { icon: 'sparkles-outline', label: 'Focus', value: 'Full-Stack Development · AI-Augmented Workflows' },
   { icon: 'location-outline', label: 'Location', value: PROFILE.location },
-  { icon: 'time-outline', label: 'Experience', value: '2+ Years Building & Deploying Production Web Apps' },
+  { icon: 'time-outline', label: 'Experience', value: '1+ Year Professional · 4 Years IT Operations' },
 ]
 
 function SectionHeading({ children }) {
